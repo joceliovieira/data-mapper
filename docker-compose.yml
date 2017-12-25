@@ -1,0 +1,26 @@
+version: '2'
+services:
+  data_map_prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: 'pcmagas:data-map:prod'
+    links:
+      - 'neo4j'
+      - 'mongodb'
+    ports:
+      - "9780:9780"
+
+  neo4j:
+    image: 'neo4j'
+    ports:
+      - '7474:7474'
+    volumes:
+      - './docker-volumes/neo4j/data:/data'
+
+  mongodb:
+    image: 'mongo'
+    ports:
+      - '27017:27017'
+    volumes:
+      - './docker-volumes/mongodb/:/data/db'
