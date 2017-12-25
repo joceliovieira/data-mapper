@@ -30,7 +30,9 @@
     "express": "^4.16.2",
     "express-session": "^1.15.6",
     "express-sessions": "^1.0.6",
+    "mongodb": "^3.0.1",
     "neo4j-driver": "^1.5.1",
+    "path": "^0.12.7",
     "twig": "^1.10.5"
   }
 }
