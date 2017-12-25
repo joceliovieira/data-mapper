@@ -8,18 +8,50 @@ services:
     links:
       - 'neo4j'
       - 'mongodb'
+    volumes:
+      - './docker-volumes/app_dev:/var/log/datamap'
     ports:
       - "9780:9780"
     environment:
       NEO4J_HOST: 'neo4j'
       MONGO_CONNECTION_STRING: 'mongodb://mongodb:map'
 
-  neo4j:
+  data_map_dev:
+    build:
+      context: .
+      dockerfile: Dockerfile_dev
+    image: 'pcmagas/data-map:dev'
+    links:
+      - 'neo4j_dev'
+      - 'mongodb'
+    volumes:
+      - './src:/opt/map/src'
+      - './www:/opt/map/www'
+      - './package.json:/opt/map/package.json'
+      - './docker-volumes/app_dev:/var/log/datamap'
+    ports:
+      - "9781:9780"
+    environment:
+      NEO4J_HOST: 'neo4j_dev'
+      NEO4J_USER: 'neo4j'
+      NEO4J_PASSWORD: 'neo4j'
+      MONGO_CONNECTION_STRING: 'mongodb://mongodb:map_dev'
+
+  neo4j_dev:
     image: 'neo4j'
     ports:
       - '7474:7474'
     volumes:
+      - './docker-volumes/neo4j_dev/data:/data'
+    environment:
+      NEO4J_AUTH: 'neo4j/neo45j'
+
+  neo4j:
+    image: 'neo4j'
+    volumes:
       - './docker-volumes/neo4j/data:/data'
+    environment:
+      NEO4J_AUTH: 'neo4j/neo45j'
 
   mongodb:
     image: 'mongo'

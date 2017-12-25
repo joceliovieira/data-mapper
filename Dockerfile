@@ -23,4 +23,4 @@ WORKDIR /opt/map/src
 EXPOSE 7474
 VOLUME /var/log/data_map
 
-CMD ["npm", "start"]
+ENTRYPOINT ["npm", "start"]
