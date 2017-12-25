@@ -1,12 +1,12 @@
 //Edit This Settings
-const httpConfig='http':{
+const httpConfig={
   // Http body size
   'body_size': '100mb',
   // Http listen port
   'port':9780,
 };
 
-const neo4jConfig='neo4j':{
+const neo4jConfig={
   //Neo4j configuration
   'uri':'',
   'username':null,

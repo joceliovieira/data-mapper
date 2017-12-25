@@ -10,6 +10,9 @@ services:
       - 'mongodb'
     ports:
       - "9780:9780"
+    environment:
+      NEO4J_HOST: 'neo4j'
+      MONGO_CONNECTION_STRING: 'mongodb://mongodb:map'
 
   neo4j:
     image: 'neo4j'

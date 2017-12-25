@@ -13,8 +13,14 @@ COPY ./package.json /opt/map
 
 RUN mkdir -p /var/log/data_map &&\
     chmod 0666 /var/log/data_map &&\
-    ls -l /opt/map &&\
+    ls -l /opt/map/src/server.js &&\
     cd /opt/map &&\
+    chmod -R +x /opt/map/src &&\
     npm install
 
-ENTRYPOINT ['node','/opt/map/src/server.js']
+WORKDIR /opt/map/src
+
+EXPOSE 7474
+VOLUME /var/log/data_map
+
+CMD ["npm", "start"]
