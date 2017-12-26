@@ -3,4 +3,4 @@
 cd /opt/map
 
 npm install
-npm start
+npm run dev

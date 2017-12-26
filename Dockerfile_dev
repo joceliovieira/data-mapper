@@ -13,7 +13,8 @@ RUN chmod +x /usr/local/bin/entrypoint.sh &&\
     chown root:root /usr/local/bin/entrypoint.sh &&\
     mkdir -p /opt/map &&\
     mkdir -p /var/log/data_map &&\
-    chmod 0666 /var/log/data_map
+    chmod 0666 /var/log/data_map &&\
+    npm install nodemon -g
 
 EXPOSE 7474
 VOLUME /var/log/data_map
