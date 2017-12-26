@@ -3,7 +3,6 @@ const router = express.Router();
 
 router.use('/', express.static(__dirname + '/../../www')); // redirect root
 
-console.log(__dirname + '/../../node_modules/jquery/dist');
 //Javascript routes
 router.use('/js', [
   express.static(__dirname + '/../../node_modules/jquery/dist'),
@@ -12,7 +11,10 @@ router.use('/js', [
 ]);
 
 //css routes
-router.use('/css', express.static(__dirname + '/../../node_modules/bootstrap/dist/css')); // redirect CSS bootstrap
-router.use('/css',express.static(__dirname + '/../../www/css'));
+router.use('/css', [
+  express.static(__dirname + '/../../node_modules/bootstrap/dist/css'),
+  express.static(__dirname + '/../../www/css')
+]);
+
 
 module.exports=router;
