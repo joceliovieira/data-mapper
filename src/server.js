@@ -22,11 +22,22 @@ app.set('twig options', {
     strict_variables: false
 });
 
-
-
 const staticFiles=require('./controllers/static_files');
 app.use('/',staticFiles);
 
+const user=require('./controllers/user');
+app.use('/',user);
+
+const panel=require('./controllers/panel');
+app.use('/',panel);
+
+app.get('/',function(req,res,next){
+  if (req.user) {
+      res.redirect('/panel');
+  } else {
+      res.redirect('/login');
+  }
+});
 
 app.listen(config.http.port,function(){
   console.log("Listening over port: "+config.http.port);

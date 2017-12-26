@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/login',function(req,res,next){
-  res.send('Login Form');
+router.get('/panel',function(req,res,next){
+  res.send('Panel main page');
 });
 
 
