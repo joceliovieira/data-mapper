@@ -7,6 +7,20 @@
   <link rel="stylesheet" href="/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/AdminLTE.min.css">
   <link rel="stylesheet" href="/css/skin-purple.css">
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <style>
+    a.nostyle:link {
+      text-decoration: inherit;
+      color: inherit;
+      cursor: auto;
+    }
+
+    a.nostyle:visited {
+      text-decoration: inherit;
+      color: inherit;
+      cursor: auto;
+    }
+  </style>
 </head>
 <body class="hold-transition skin-purple sidebar-mini">
   <div class="wrapper">
@@ -38,7 +52,7 @@
       </ul>
     </aside>
     <div class="content-wrapper">
-      <section class="content-header">{{ title }}</section>
+      <section class="content-header"><h1>{{ title }}</h1></section>
       <section class="content">
           {% block content %}{% endblock %}
       </section>

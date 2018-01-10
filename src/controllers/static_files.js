@@ -13,8 +13,12 @@ router.use('/js', [
 //css routes
 router.use('/css', [
   express.static(__dirname + '/../../node_modules/bootstrap/dist/css'),
+  express.static(__dirname + '/../../node_modules/font-awesome/css'),
   express.static(__dirname + '/../../www/css')
 ]);
 
+router.use('/fonts',[
+  express.static(__dirname + '/../../node_modules/font-awesome/fonts'),
+])
 
 module.exports=router;
