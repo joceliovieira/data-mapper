@@ -7,7 +7,7 @@ router.get('/panel',function(req,res,next){
   });
 });
 
-router.get('/table',function(req,res,next){
+router.get('/data_assets',function(req,res,next){
   res.render('table.html.twig',{
     'title': "Data Assets"
   });
@@ -15,7 +15,7 @@ router.get('/table',function(req,res,next){
 
 router.get('/flow-map',function(req,res,next){
   res.render('flow-map.html.twig',{
-    'title': "Data Assets"
+    'title': "Data graph"
   });
 });
 
