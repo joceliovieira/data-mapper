@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title> {{ title }} </title>
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="/css/skin-purple.css">
+</head>
+<body class="hold-transition skin-purple sidebar-mini">
+  <div class="wrapper">
+    <header class="main-header">
+      <a href="/" class="logo">
+        <!-- mini logo for sidebar mini 50x50 pixels -->
+        <span class="logo-mini">F-D</span>
+        <!-- logo for regular state and mobile devices -->
+        <span class="logo-lg">Flow-D</span>
+      </a>
+      <nav class="navbar navbar-static-top" >
+        <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+          <span class="sr-only">Toggle navigation</span>
+        </a>
+      </nav>
+    </header>
+    <aside class="main-sidebar">
+      <ul class="sidebar-menu" data-widget="tree">
+        <li>
+          <a href="pages/widgets.html">
+            <span>Data Asset Entry</span>
+          </a>
+        </li>
+        <li>
+          <a href="pages/widgets.html">
+            <span>Graph Generation</span>
+          </a>
+        </li>
+      </ul>
+    </aside>
+    <div class="content-wrapper">
+      <section class="content-header">{{ title }}</section>
+      <section class="content">
+          {% block content %}{% endblock %}
+      </section>
+    </div>
+  </div>
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
+  <script src="/js/adminlte.min.js"></script>
+</body>
+</html>

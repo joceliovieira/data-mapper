@@ -32,11 +32,11 @@ const panel=require('./controllers/panel');
 app.use('/',panel);
 
 app.get('/',function(req,res,next){
-  if (req.user) {
+  // if (req.user) {
       res.redirect('/panel');
-  } else {
-      res.redirect('/login');
-  }
+  // } else {
+  //     res.redirect('/login');
+  // }
 });
 
 app.listen(config.http.port,function(){
