@@ -27,4 +27,9 @@ router.use('/fonts',[
   express.static(__dirname + '/../../node_modules/font-awesome/fonts'),
 ])
 
+router.use('/images',[
+  express.static(__dirname + '/../../node_modules/datatables/media/images'),
+
+]);
+
 module.exports=router;

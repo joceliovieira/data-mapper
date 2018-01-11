@@ -2,6 +2,8 @@ const express=require('express');
 const bodyParser=require('body-parser');
 const cookieParser=require('cookie-parser');
 const session = require("express-session");
+const csrf = require('csurf');
+
 const passport = require("passport");
 
 const config=require('./config');
@@ -9,6 +11,7 @@ const config=require('./config');
 const app=express();
 app.use(bodyParser.urlencoded({extended:true,inflate:true}));
 app.use(cookieParser());
+app.use(csrf({ cookie: true }));
 app.use(session({ secret: 'w4takusHinamaEwa!2334pc_magasDesu',
     resave: true,
     saveUninitialized: true}

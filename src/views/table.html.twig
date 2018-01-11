@@ -12,7 +12,11 @@
     <div class="box">
       <div class="box-header">
         <div class="row">
-          <div class="col-xs-3"><button class="btn btn-primary" role="button" id="trigger_upload"><i class="fa fa-upload" aria-hidden="true"></i>&nbsp;Upload an Excell File</button></div>
+          <div class="col-xs-3">
+            <button class="btn btn-primary btn-flat" role="button" id="trigger_upload">
+              <i class="fa fa-upload" aria-hidden="true"></i>&nbsp;Upload an Excell File
+            </button>
+          </div>
           <div class="col-xs-6">
             <select id="version_select" class="select2" style="width: 100%; height:100%" name="version">
                   <option selected="selected" value="AL">Capone</option>
@@ -602,7 +606,8 @@
     </div>
   </div>
 </div>
-<form id="#upload_form" style="display:none" >
+<form id="upload_form" type="multipart/form-data" method="post" action="/data_assets" style="display:none" >
+  <input type="hidden" name="_csrf" value="{{csrfToken}}">
   <input id="excell_upload" type="file" style="visible:hidden" name="data_assets"/>
 </form>
 {% endblock %}
@@ -625,13 +630,48 @@
     });
 
     // Firing the file upload
+    var uploading=false;
     $("#trigger_upload").on('click',function(e){
       e.preventDefault();
-      $("#excell_upload").click();
+      if(!uploading){
+        $("#excell_upload").click();
+      }
     });
 
     // Select2 Intialization
     $("#version_select").select2();
+
+    $('#excell_upload').on('change',function(event){
+
+      event.preventDefault();
+      var formData = new FormData($("#upload_form")[0]);
+
+      $.ajax({
+        'type':$("#upload_form").attr('method'),
+        'data': formData,
+        'url': $("#upload_form").attr('action'),
+        'processData': false,
+        'contentType': false,
+        'mimeType': 'multipart/form-data',
+        'beforeSend': function (x) {
+           if (x && x.overrideMimeType) {
+               x.overrideMimeType("multipart/form-data");
+          }
+          $('#trigger_upload').addClass('disabled');
+        },
+        'success':function(data){
+          $('#upload_form > input[name=_csrf]').value(data.csrfToken);
+        },
+        'fail':function(){
+
+        },
+        'complete':function(){
+          $('#trigger_upload').removeClass('disabled');
+        }
+      });
+
+    });
+
   })
 </script>
 {% endblock %}
