@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="/css/AdminLTE.min.css">
   <link rel="stylesheet" href="/css/skin-purple.css">
   <link rel="stylesheet" href="/css/font-awesome.min.css">
+  {% block css %}{% endblock %}
+
   <style>
     a.nostyle:link {
       text-decoration: inherit;
@@ -66,5 +68,6 @@
   <script src="/js/jquery.min.js"></script>
   <script src="/js/bootstrap.min.js"></script>
   <script src="/js/adminlte.min.js"></script>
+  {% block javascripts %}{% endblock %}
 </body>
 </html>
