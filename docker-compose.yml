@@ -27,7 +27,7 @@ services:
     volumes:
       - './src:/opt/map/src'
       - './www:/opt/map/www'
-      - './node_modules:/opt/map/node_modules'
+      - './node_modules:/opt/map/node_modules:Z'
       - './package.json:/opt/map/package.json'
       - './docker-volumes/app_dev:/var/log/datamap'
     ports:

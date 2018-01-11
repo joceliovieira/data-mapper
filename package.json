@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/server.js",
-    "dev": "nodemon -e js,twig,css src/server.js"
+    "dev": "nodemon --watch www --watch src --watch node_modules -e js,twig,css src/server.js"
   },
   "repository": {
     "type": "git",
@@ -30,6 +30,7 @@
     "body-parser": "^1.18.2",
     "bootstrap": "^3.3.7",
     "cookie-parser": "^1.4.3",
+    "datatables": "^1.10.13",
     "express": "^4.16.2",
     "express-session": "^1.15.6",
     "express-sessions": "^1.0.6",
