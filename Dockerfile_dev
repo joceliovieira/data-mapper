@@ -7,11 +7,8 @@ ENV NEO4J_PASSWORD=""
 ENV MONGO_CONNECTION_STRING=""
 ENV LOGS_DIR="/var/log/data_map"
 
-COPY ./docker_scripts/entrypoint_dev.sh /usr/local/bin/entrypoint.sh
 
-RUN chmod +x /usr/local/bin/entrypoint.sh &&\
-    chown root:root /usr/local/bin/entrypoint.sh &&\
-    mkdir -p /opt/map &&\
+RUN mkdir -p /opt/map &&\
     mkdir -p /var/log/data_map &&\
     chmod 0666 /var/log/data_map &&\
     npm install nodemon -g
@@ -22,4 +19,4 @@ VOLUME /opt/map
 
 WORKDIR /opt/map
 
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+ENTRYPOINT ["npm", "run", "dev"]
