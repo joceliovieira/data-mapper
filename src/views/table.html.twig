@@ -1,37 +1,26 @@
-{% extends "layout.html.twig" %}
+3{% extends "layout.html.twig" %}
 
 {% block css %}
-<link rel="stylesheet" src="/css/jquery.dataTables.min.css"/>
+<link rel="stylesheet" href="/css/jquery.dataTables.min.css"/>
+<link rel="stylesheet" href="/css/select2.min.css" />
 {% endblock %}
 
 
 {% block content %}
 <div class="row">
-  <div class="col-xs-12 col-md-6 col-lg-6">
-      <div class="box box-primary">
-        <div class="box box-header"><h4>Upload assets in excell form</h4></div>
-          <form id="#upload_form" >
-            <div class="box-body">
-                <input type="file" name="data_assets"/>
-            </div>
-          </form>
-      </div>
-  </div>
-  <div class="col-xs-12 col-md-6 col-lg-6">
-    <div class="box box-primary">
-      <div class="box box-header"><h4>Uploaded Versions</h4></div>
-      <div class="box-body">
-        <div class="input-group input-group-sm">
-          <input id="#search" type="text" placeholder="Search for version" class="form-control">
-          <span class="input-group-btn">
-            <button type="button" class="btn btn-info btn-flat"><i class="fa fa-search" aria-hidden="true"></i></button>
-          </span>
-        </div>
-      </div>
-    </div>
-  </div>
   <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
     <div class="box">
+      <div class="box-header">
+        <div class="row">
+          <div class="col-xs-3"><button class="btn btn-primary" role="button" id="trigger_upload"><i class="fa fa-upload" aria-hidden="true"></i>&nbsp;Upload an Excell File</button></div>
+          <div class="col-xs-6">
+            <select id="version_select" class="select2" style="width: 100%; height:100%" name="version">
+                  <option selected="selected" value="AL">Capone</option>
+                  <option value="Chuck">Norris</option>
+            </select>
+          </div>
+        </div>
+      </div>
       <div class="box-body">
         <table id="infotable" class="table display nowrap dataTable" width="100%">
           <thead>
@@ -613,14 +602,19 @@
     </div>
   </div>
 </div>
-
+<form id="#upload_form" style="display:none" >
+  <input id="excell_upload" type="file" style="visible:hidden" name="data_assets"/>
+</form>
 {% endblock %}
 
 {% block javascripts %}
 <script src="/js/jquery.dataTables.min.js"></script>
 <script src="/js/dataTables.bootstrap.min.js"></script>
+<script src="/js/select2.min.js"></script>
 <script>
   $(document).ready(function(){
+
+    /*Table Initialization*/
     $("#infotable").DataTable({
         "paging": true,
         'searching': false,
@@ -629,6 +623,15 @@
         'scroller': true,
         "autoWidth": true
     });
+
+    // Firing the file upload
+    $("#trigger_upload").on('click',function(e){
+      e.preventDefault();
+      $("#excell_upload").click();
+    });
+
+    // Select2 Intialization
+    $("#version_select").select2();
   })
 </script>
 {% endblock %}

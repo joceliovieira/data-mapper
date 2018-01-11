@@ -9,7 +9,7 @@ router.get('/panel',function(req,res,next){
 
 router.get('/data_assets',function(req,res,next){
   res.render('table.html.twig',{
-    'title': "Data Assets"
+    'title': "Data Asset Inventory"
   });
 });
 

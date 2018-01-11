@@ -9,6 +9,7 @@ router.use('/js', [
   express.static(__dirname + '/../../node_modules/bootstrap/dist/js'),
   express.static(__dirname + '/../../node_modules/datatables/media/js'),
   express.static(__dirname + '/../../node_modules/datatables-bootstrap/js'),
+  express.static(__dirname + '/../../node_modules/select2/dist/js'),
   express.static(__dirname + '/../../www/js')
 ]);
 
@@ -18,6 +19,7 @@ router.use('/css', [
   express.static(__dirname + '/../../node_modules/font-awesome/css'),
   express.static(__dirname + '/../../node_modules/datatables/media/css'),
   express.static(__dirname + '/../../node_modules/datatables-bootstrap/css'),
+  express.static(__dirname + '/../../node_modules/select2/dist/css'),
   express.static(__dirname + '/../../www/css')
 ]);
 
