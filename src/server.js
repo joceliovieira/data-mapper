@@ -9,6 +9,7 @@ const passport = require("passport");
 const config=require('./config');
 
 const app=express();
+
 app.use(bodyParser.urlencoded({extended:true,inflate:true}));
 app.use(cookieParser());
 app.use(csrf({ cookie: true }));
@@ -16,8 +17,15 @@ app.use(session({ secret: 'w4takusHinamaEwa!2334pc_magasDesu',
     resave: true,
     saveUninitialized: true}
   ));
-app.use(passport.initialize());
-app.use(passport.session());
+
+app.use(function (req, res, next){
+  res.locals._csrf = req.csrfToken();
+  next();
+});
+
+// app.use(passport.initialize());
+// app.use(passport.session());
+
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'twig');

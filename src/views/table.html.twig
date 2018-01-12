@@ -1,4 +1,4 @@
-3{% extends "layout.html.twig" %}
+{% extends "layout.html.twig" %}
 
 {% block css %}
 <link rel="stylesheet" href="/css/jquery.dataTables.min.css"/>
@@ -606,8 +606,7 @@
     </div>
   </div>
 </div>
-<form id="upload_form" type="multipart/form-data" method="post" action="/data_assets" style="display:none" >
-  <input type="hidden" name="_csrf" value="{{csrfToken}}">
+<form id="upload_form" type="multipart/form-data" data-csrf="{{csrfToken}}" method="post" action="/data_assets" style="display:none" >
   <input id="excell_upload" type="file" style="visible:hidden" name="data_assets"/>
 </form>
 {% endblock %}
@@ -653,6 +652,7 @@
         'processData': false,
         'contentType': false,
         'mimeType': 'multipart/form-data',
+        'headers': {"X-CSRF-Token": $("#upload_form").attr('data-csrf') },
         'beforeSend': function (x) {
            if (x && x.overrideMimeType) {
                x.overrideMimeType("multipart/form-data");
@@ -660,7 +660,7 @@
           $('#trigger_upload').addClass('disabled');
         },
         'success':function(data){
-          $('#upload_form > input[name=_csrf]').value(data.csrfToken);
+          $('#upload_form').attr('data-csrf',data.csrfToken)
         },
         'fail':function(){
 

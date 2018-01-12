@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-
 //Main Panel Page
 router.get('/panel',function(req,res,next){
   res.render('mainPanel.html.twig',{
@@ -18,7 +17,7 @@ router.get('/data_assets',function(req,res,next){
 });
 
 router.post('/data_assets',function(req,res,next){
-  req.json({'csrfToken':req.csrfToken()});
+  res.json({'csrfToken':req.csrfToken()});
 });
 
 router.get('/flow-map',function(req,res,next){
