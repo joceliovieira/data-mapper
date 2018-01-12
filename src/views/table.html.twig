@@ -640,6 +640,7 @@
     // Select2 Intialization
     $("#version_select").select2();
 
+    // Trigger upload
     $('#excell_upload').on('change',function(event){
 
       event.preventDefault();
@@ -661,6 +662,7 @@
         },
         'success':function(data){
           $('#upload_form').attr('data-csrf',data.csrfToken)
+          sucessMessageNotification("Excell file uploaded, it's contents will be available sortly");
         },
         'error':function(jqXHR,status,errorThrown){
           if(jqXHR.status===403){

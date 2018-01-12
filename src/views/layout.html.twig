@@ -101,9 +101,13 @@
   <script>
 
     function errorMessageNotification(message){
-      console.log("Dispolaying error message");
       insertNotification("<li class=\"text-danger\"><i class=\"fa fa-warning\"></i>&nbsp;"+message+"</li>");
       displayMessage(true,message);
+    }
+
+    function sucessMessageNotification(message){
+      insertNotification("<li class=\"text-success\"><i class=\"fa fa-check\"></i>&nbsp;"+message+"</li>");
+      displayMessage(false,message);
     }
 
     function insertNotification(notificationHtml){
