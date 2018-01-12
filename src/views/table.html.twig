@@ -663,11 +663,16 @@
           $('#upload_form').attr('data-csrf',data.csrfToken)
         },
         'error':function(jqXHR,status,errorThrown){
-          console.error(errorThrown);
+          if(jqXHR.status===403){
+            errorMessageNotification("Upload failed, please refresh the page in order to solve it");
+          } else {
+            errorMessageNotification("Upload failed, please try again later");
+          }
         },
         'complete':function(){
           $('#trigger_upload').removeClass('disabled');
-        }
+        },
+        timeout: 3000
       });
     });
 

@@ -77,6 +77,20 @@
     <div class="content-wrapper">
       <section class="content-header"><h1>{{ title }}</h1></section>
       <section class="content">
+        <div id="notification_message" class="row" style="display:none">
+          <div class="col-xs-12">
+            <div data-notification-success="true" class="callout callout-success">
+              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+              <h4><i class="icon fa fa-check"></i> Sucess!</h4>
+              <span id="sucess_message"></span>
+            </div>
+            <div data-notification-error="true" class="callout callout-danger">
+              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+              <h4><i class="icon fa fa-warning"></i> Error!</h4>
+              <span id="error_message" ></span>
+            </div>
+          </div>
+        </div>
           {% block content %}{% endblock %}
       </section>
     </div>
@@ -85,15 +99,37 @@
   <script src="/js/bootstrap.min.js"></script>
   <script src="/js/adminlte.min.js"></script>
   <script>
+
     function errorMessageNotification(message){
-      insertNotification("<li class=\"text-danger\"><i class=\"fa fa-warning\"></i>"+message+"</li>")
+      console.log("Dispolaying error message");
+      insertNotification("<li class=\"text-danger\"><i class=\"fa fa-warning\"></i>&nbsp;"+message+"</li>");
+      displayMessage(true,message);
     }
 
     function insertNotification(notificationHtml){
-      $("#notifications-menu > dropdown-menu").prepend(notificationHtml);
-      var notifications=$("#notifications-menu > dropdown-menu").children().length;
+      $("#notification_area").prepend(notificationHtml);
+      var notifications=$("#notification_area").children().length;
       $("span[data-notification]").text(notifications);
     }
+
+    function displayMessage(isError,message){
+      $("#notification_message").hide();
+      if(isError){
+        $("#error_message").text(message);
+        $("div[data-notification-success]").hide();
+        $("div[data-notification-error]").show();
+      } else {
+        $("#sucess_message").text(message);
+        $("div[data-notification-error]").hide();
+        $("div[data-notification-success]").show();
+      }
+
+      $("#notification_message").show();
+      setTimeout(function(){
+        $("#notification_message").hide();
+      },1500)
+    }
+
   </script>
   {% block javascripts %}{% endblock %}
 </body>
