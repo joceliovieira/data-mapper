@@ -5,7 +5,6 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title> {{ title }} </title>
   <link rel="stylesheet" href="/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/css/AdminLTE.min.css">
   <link rel="stylesheet" href="/css/skin-purple.css">
   <link rel="stylesheet" href="/css/font-awesome.min.css">
   {% block css %}{% endblock %}
@@ -22,6 +21,8 @@
       cursor: auto;
     }
   </style>
+  <link rel="stylesheet" href="/css/AdminLTE.min.css">
+
 </head>
 <body class="hold-transition skin-purple sidebar-mini">
   <div class="wrapper">
@@ -36,6 +37,22 @@
         <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
           <span class="sr-only">Toggle navigation</span>
         </a>
+        <div class="navbar-custom-menu">
+          <ul class="nav navbar-nav">
+            <li class="dropdown notifications-menu">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-bullhorn"></i>
+                <span data-notification="true" class="label label-primary">0</span>
+              </a>
+              <ul class="dropdown-menu">
+                <li class="header">You have <span data-notification="true" >0</span> notifications</li>
+                <li>
+                  <ul id="notification_area" class="menu"></ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
       </nav>
     </header>
     <aside class="main-sidebar">
@@ -67,6 +84,17 @@
   <script src="/js/jquery.min.js"></script>
   <script src="/js/bootstrap.min.js"></script>
   <script src="/js/adminlte.min.js"></script>
+  <script>
+    function errorMessageNotification(message){
+      insertNotification("<li class=\"text-danger\"><i class=\"fa fa-warning\"></i>"+message+"</li>")
+    }
+
+    function insertNotification(notificationHtml){
+      $("#notifications-menu > dropdown-menu").prepend(notificationHtml);
+      var notifications=$("#notifications-menu > dropdown-menu").children().length;
+      $("span[data-notification]").text(notifications);
+    }
+  </script>
   {% block javascripts %}{% endblock %}
 </body>
 </html>
