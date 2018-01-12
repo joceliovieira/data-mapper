@@ -1,4 +1,4 @@
-const Excel = require('exceljs');
+const Excell = require('exceljs');
 const EventEmitter = require('events');
 const stream = require('stream');
 
@@ -40,6 +40,7 @@ module.exports=function(emmiter=null) {
       bufferStream.on('finish',()=>{
         _emmiter.emmit('excell_read_start',worksheet.actualRowCount);
         const worksheet = workbook.getWorksheet(1);
+        console.log(worksheet);
         worksheet.eachRow((row, rowNumber) => {
           if(rowNumber === 1){return;}//Skip first line
           _emmiter.emmit('onRead',rowNumber,worksheet.actualRowCount);
