@@ -31,15 +31,18 @@ router.post('/data_assets',function(req,res,next){
                   'csrfToken':req.csrfToken() //Renew the CSRF token
   };
 
-  emmiter.on('excell_read_start',()=>{
-    response.status=true;
-    res.json(response);
+  emmiter.on('excell_read_error',(message)=>{
+    if(!res.headersSent) {
+      response.message=message;
+      res.json(response);
+    }
   });
 
-  emmiter.on('excell_read_error',(message)=>{
-    console.log("Got Emmit")
-    response.message=message;
-    res.json(response);
+  emmiter.on('excell_read_start',()=>{
+    if(!res.headersSent){
+      response.status=true;
+      res.json(response);
+    }
   });
 
   excellReader.readAllLinesFromXLSXBufferAndProcessWithACallback(req.files.data_assets.data,(data,emmitter)=> {

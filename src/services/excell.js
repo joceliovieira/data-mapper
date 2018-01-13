@@ -26,7 +26,6 @@ module.exports=function(emmiter) {
   */
   self.readAllLinesFromXLSXBufferAndProcessWithACallback = function(data,onReadCallback) {
 
-      console.log("Detecting type");
       const type=fileType(data);
       console.log(type);
       if(type && type.mime==='application/x-msi'){
@@ -34,43 +33,23 @@ module.exports=function(emmiter) {
         const workbook=XLSX.read(data,{type:"buffer"});
         console.log("Workbook Info: "+workbook);
         console.log(workbook);
-
         if(!workbook){
-          _emmiter.emit('excell_read_error',"Internal Error cannot read workbook, try to re-upload the excell file");
+          return _emmiter.emit('excell_read_error',"Internal Error cannot read workbook, try to re-upload the excell file");
         } else {
-          _emmiter.emit('excell_read_start');
-          
+          return _emmiter.emit('excell_read_start');
         }
 
       } else {
         console.log("Emmiting");
-        _emmiter.emit('excell_read_error','File is not a valid Excell format');
+        return _emmiter.emit('excell_read_error','File is not a valid Excell format');
       }
-
-
-      // const workbook= new Excell.Workbook();
-      // const bufferStream = new stream.PassThrough();
-      // bufferStream.end(data);
-      // bufferStream.pipe(workbook.xlsx.createInputStream());
-      //
-      // bufferStream.on('finish',()=>{
-      //   workbook.eachSheet(function(worksheet, sheetId) {
-      //     console.log("Worksheet Info",worksheet);
-      //   });
-      //   // const worksheet = workbook.getWorksheet(1);
-      //   _emmiter.emit('excell_read_start');
-      //   // worksheet.eachRow((row, rowNumber) => {
-      //   //   if(rowNumber === 1){return;}//Skip first line
-      //   //   _emmiter.emmit('onRead',rowNumber,worksheet.actualRowCount);
-      //   //   console.log(row)
-      //   //   onReadCallback(row,_emmiter);
-      //   // });
-      // });
-      //
-      // bufferStream.on('error',()=>{
-      //   _emmiter.emit('excell_read_error',err);
-      // });
-
-    return _emmiter;
   };
+
+  /**
+  * An ASYNCRONOUS function that iterates the worksheet of a workbook
+  * @param
+  */
+  const iterateWorksheet=function(worksheet,callback){
+
+  }
 };
