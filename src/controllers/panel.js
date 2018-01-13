@@ -31,21 +31,30 @@ router.post('/data_assets',function(req,res,next){
                   'csrfToken':req.csrfToken() //Renew the CSRF token
   };
 
-  emmiter.on('excell_read_error',(message)=>{
+  // emmiter.on('excell_read_error',(message)=>{
+  //   if(!res.headersSent) {
+  //     response.message=message;
+  //     res.json(response);
+  //   }
+  // });
+  //
+  // emmiter.on('excell_read_start',()=>{
+  //   if(!res.headersSent){
+  //     response.status=true;
+  //     res.json(response);
+  //   }
+  // });
+
+  excellReader.readAllLinesFromXLSXBufferAndProcessWithACallback(req.files.data_assets.data,(error)=>{
     if(!res.headersSent) {
-      response.message=message;
-      res.json(response);
-    }
-  });
-
-  emmiter.on('excell_read_start',()=>{
-    if(!res.headersSent){
+      if(error){
+        response.message=error.message;
+        return res.json(response);
+      }
       response.status=true;
-      res.json(response);
+      return res.json(response);
     }
-  });
-
-  excellReader.readAllLinesFromXLSXBufferAndProcessWithACallback(req.files.data_assets.data,(data,emmitter)=> {
+  },(data,emmitter)=> {
     console.log("Read Line: ",data);
   });
 });

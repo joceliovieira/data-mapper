@@ -16,6 +16,7 @@ module.exports=function(emmiter) {
   * Read the excell workbook based on template and process the results using a callback.
   *
   * @param {Buffer} data The data from the uploaded excell file
+  * @param {Function} responseCallback Callback that returns stuff back to the http response
   * @param {Function} onReadCallback A callback that is used when the function reads an excell line.
   *
   * The callback should take the following parameters:
@@ -24,32 +25,38 @@ module.exports=function(emmiter) {
   *
   * @return Emmiter
   */
-  self.readAllLinesFromXLSXBufferAndProcessWithACallback = function(data,onReadCallback) {
+  self.readAllLinesFromXLSXBufferAndProcessWithACallback = function(data,responseCallback,onReadCallback) {
 
       const type=fileType(data);
-      console.log(type);
-      if(type && type.mime==='application/x-msi'){
-        console.log("try")
-        const workbook=XLSX.read(data,{type:"buffer"});
-        console.log("Workbook Info: "+workbook);
-        console.log(workbook);
-        if(!workbook){
-          return _emmiter.emit('excell_read_error',"Internal Error cannot read workbook, try to re-upload the excell file");
-        } else {
-          return _emmiter.emit('excell_read_start');
-        }
 
+      if(type && type.mime==='application/x-msi'){
+        const workbook=XLSX.read(data,{type:"buffer"});
+
+        const first_sheet_name = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[first_sheet_name];
+        iterateWorksheet(worksheet,(error)=>{
+          if(error){
+            return responseCallback(new Error('File is not a valid Excell format'));
+          }
+        },onReadCallback);
+        //@todo: remove this line and return it asyncronous
+        responseCallback();
       } else {
-        console.log("Emmiting");
-        return _emmiter.emit('excell_read_error','File is not a valid Excell format');
+        // return _emmiter.emit('excell_read_error','File is not a valid Excell format');
+        return responseCallback(new Error('File is not a valid Excell format'));
       }
   };
 
   /**
   * An ASYNCRONOUS function that iterates the worksheet of a workbook
-  * @param
+  * @param {Object} worksheet
+  * @param {Function} callback
+  *
   */
-  const iterateWorksheet=function(worksheet,callback){
+  const iterateWorksheet=function(worksheet,responseCallback,callback){
+    process.nextTick(function(){
+      console.log(worksheet);
 
+    });
   }
 };
