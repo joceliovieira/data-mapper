@@ -2,6 +2,8 @@
 if(typeof require !== 'undefined') XLSX = require('xlsx');
 const fileType = require('file-type');
 const stream = require('stream');
+const config=require('../config');
+
 
 module.exports=function(emmiter) {
 
@@ -34,28 +36,30 @@ module.exports=function(emmiter) {
 
         const first_sheet_name = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[first_sheet_name];
-        iterateWorksheet(worksheet,(error)=>{
-          if(error){
-            return responseCallback(new Error('File is not a valid Excell format'));
-          }
-        },onReadCallback);
-        //@todo: remove this line and return it asyncronous
-        responseCallback();
+
+        let last_column=worksheet['!ref'].split(':');
+        last_column=last_column[last_column.length-1].charAt[0]
+        console.log("Last column: "+last_column);
+        if( last_column!==config.excell.maxColumn ) {
+          return responseCallback(new Error('The excell file is not into the valid format. Please use the valid template from the provided template'));
+        }
+        iterateWorksheet(worksheet,onReadCallback);
+        return responseCallback(null);
       } else {
         // return _emmiter.emit('excell_read_error','File is not a valid Excell format');
-        return responseCallback(new Error('File is not a valid Excell format'));
+        return responseCallback(new Error('You provided a non valid excell file'));
       }
   };
 
   /**
   * An ASYNCRONOUS function that iterates the worksheet of a workbook
-  * @param {Object} worksheet
-  * @param {Function} callback
-  *
+  * @param {Object} worksheet The worksheet to Iterate.
+  * @param {Function} callback A callback function that returns the data.
   */
-  const iterateWorksheet=function(worksheet,responseCallback,callback){
+  const iterateWorksheet=function(worksheet,callback){
     process.nextTick(function(){
-      console.log(worksheet);
+      //Use this one to get the column number: worksheet['!ref']
+      //Count How many Columns the worksheet has It should have a predefined name of arrays
 
     });
   }

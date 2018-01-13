@@ -1,4 +1,5 @@
 //Edit This Settings
+
 const httpConfig={
   // Http body size
   'body_size': '100mb',
@@ -28,7 +29,8 @@ const logs={
   'http_requests':'access.log',
   'errors':'app_errors.log'
 }
-//Config via enviromental variable
+
+
 
 //Config listen port
 if(process.env.HTTP_PORT){
@@ -77,23 +79,16 @@ if(process.env.EXCELL_UPLOAD){
   excell_upload.path=process.env.EXCELL_UPLOAD
 }
 
-console.log("Autogenerating the directory that excell will get uploaded");
-fs.mkdir(logs.path,'0666',function(e){
-    if(!e || (e && e.code === 'EEXIST')){
-        console.log('Log directory already exists skipping')
-    } else {
-        //debug
-        console.error(e);
-        system.exit(1);
-    }
-});
+// DO NOT EDIT BELLOW THIS LINE
 
-
-// DO NOT EDID BELLOW THIS LINE
+const excellFormat={
+  'maxColumn':'Q' //To get modified via developers according to the spedifications
+}
 
 module.exports={
   'http':httpConfig,
   'neo4j':neo4jConfig,
   'mongoDbConfig':mongoDbConfig,
-  'logs':logs
+  'logs':logs,
+  'excell':excellFormat,
 };
