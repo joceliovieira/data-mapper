@@ -662,7 +662,11 @@
         },
         'success':function(data){
           $('#upload_form').attr('data-csrf',data.csrfToken)
-          sucessMessageNotification("Excell file uploaded, it's contents will be available sortly");
+          if(data.status){
+            sucessMessageNotification("Excell file uploaded, it's contents will be available sortly");
+          } else {
+            errorMessageNotification(data.message);
+          }
         },
         'error':function(jqXHR,status,errorThrown){
           if(jqXHR.status===403){

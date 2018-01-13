@@ -1,10 +1,12 @@
 const express = require('express');
 const fileUpload = require('express-fileupload');
 const Excell = require('../services/excell.js');
+const EventEmitter = require('events');
 
 const router = express.Router();
 
-const excellReader = new Excell();
+const emmiter=new EventEmitter();
+const excellReader = new Excell(emmiter);
 
 router.use(fileUpload());
 
@@ -29,17 +31,19 @@ router.post('/data_assets',function(req,res,next){
                   'csrfToken':req.csrfToken() //Renew the CSRF token
   };
 
-  const emmiter=excellReader.readAllLinesFromXLSXBufferAndProcessWithACallback(req.files.data_assets.data,(data,emmitter)=> {
-    console.log("Read Line: ",data);
-  });
-
-  emmiter.on('read_start',()=>{
+  emmiter.on('excell_read_start',()=>{
     response.status=true;
     res.json(response);
   });
 
-  emmiter.on('excell_read_error',()=>{
+  emmiter.on('excell_read_error',(message)=>{
+    console.log("Got Emmit")
+    response.message=message;
     res.json(response);
+  });
+
+  excellReader.readAllLinesFromXLSXBufferAndProcessWithACallback(req.files.data_assets.data,(data,emmitter)=> {
+    console.log("Read Line: ",data);
   });
 });
 

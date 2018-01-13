@@ -1,22 +1,16 @@
-const Excell = require('exceljs');
-const EventEmitter = require('events');
+// const Excell = require('exceljs');
+if(typeof require !== 'undefined') XLSX = require('xlsx');
+const fileType = require('file-type');
 const stream = require('stream');
 
-module.exports=function(emmiter=null) {
+module.exports=function(emmiter) {
 
   const self=this;
 
   /**
   * @var A private instance of the local event emmiter
   */
-  let _emmiter=null;
-
-  //If no emmites has been provided create one
-  if(!emmiter){
-    _emmiter = new EventEmitter();
-  } else {
-    _emmiter=emmiter;
-  }
+  let _emmiter=emmiter;
 
   /**
   * Read the excell workbook based on template and process the results using a callback.
@@ -32,26 +26,47 @@ module.exports=function(emmiter=null) {
   */
   self.readAllLinesFromXLSXBufferAndProcessWithACallback = function(data,onReadCallback) {
 
-      const workbook= new Excell.Workbook();
-      const bufferStream = new stream.PassThrough();
-      bufferStream.end(data);
-      bufferStream.pipe(workbook.xlsx.createInputStream());
+      console.log("Detecting type");
+      const type=fileType(data);
+      console.log(type);
+      if(type && type.mime==='application/x-msi'){
+        console.log("try")
+        const workbook=XLSX.read(data,{type:"buffer"});
+        console.log("Workbook Info: "+workbook);
+        console.log(workbook);
+        //
+        // if(!workbook){
+        //   _emmiter.emit('excell_read_error',err);
+        // }
+      } else {
+        console.log("Emmiting");
+        _emmiter.emit('excell_read_error','File is not a valid Excell format');
+      }
 
-      bufferStream.on('finish',()=>{
-        _emmiter.emmit('excell_read_start',worksheet.actualRowCount);
-        const worksheet = workbook.getWorksheet(1);
-        console.log(worksheet);
-        worksheet.eachRow((row, rowNumber) => {
-          if(rowNumber === 1){return;}//Skip first line
-          _emmiter.emmit('onRead',rowNumber,worksheet.actualRowCount);
-          console.log(row)
-          onReadCallback(row,_emmiter);
-        });
-      });
 
-      bufferStream.on('error',()=>{
-        _emmiter.emmit('excell_read_error',err);
-      });
+      // const workbook= new Excell.Workbook();
+      // const bufferStream = new stream.PassThrough();
+      // bufferStream.end(data);
+      // bufferStream.pipe(workbook.xlsx.createInputStream());
+      //
+      // bufferStream.on('finish',()=>{
+      //   workbook.eachSheet(function(worksheet, sheetId) {
+      //     console.log("Worksheet Info",worksheet);
+      //   });
+      //   // const worksheet = workbook.getWorksheet(1);
+      //   _emmiter.emit('excell_read_start');
+      //   // worksheet.eachRow((row, rowNumber) => {
+      //   //   if(rowNumber === 1){return;}//Skip first line
+      //   //   _emmiter.emmit('onRead',rowNumber,worksheet.actualRowCount);
+      //   //   console.log(row)
+      //   //   onReadCallback(row,_emmiter);
+      //   // });
+      // });
+      //
+      // bufferStream.on('error',()=>{
+      //   _emmiter.emit('excell_read_error',err);
+      // });
+
     return _emmiter;
   };
 };
