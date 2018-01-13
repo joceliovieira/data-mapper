@@ -34,10 +34,14 @@ module.exports=function(emmiter) {
         const workbook=XLSX.read(data,{type:"buffer"});
         console.log("Workbook Info: "+workbook);
         console.log(workbook);
-        //
-        // if(!workbook){
-        //   _emmiter.emit('excell_read_error',err);
-        // }
+
+        if(!workbook){
+          _emmiter.emit('excell_read_error',"Internal Error cannot read workbook, try to re-upload the excell file");
+        } else {
+          _emmiter.emit('excell_read_start');
+          
+        }
+
       } else {
         console.log("Emmiting");
         _emmiter.emit('excell_read_error','File is not a valid Excell format');

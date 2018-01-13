@@ -661,8 +661,9 @@
           $('#trigger_upload').addClass('disabled');
         },
         'success':function(data){
+          data=JSON.parse(data);
           $('#upload_form').attr('data-csrf',data.csrfToken)
-          if(data.status){
+          if(data.status===true){
             sucessMessageNotification("Excell file uploaded, it's contents will be available sortly");
           } else {
             errorMessageNotification(data.message);
