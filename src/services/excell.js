@@ -35,6 +35,14 @@ module.exports=function(emmiter) {
       if(type && (type.mime === 'application/x-msi' || type.mime === 'application/zip')){
 
         let workbook=null;
+
+        /*
+        * Some excell files are zipped xml files.
+        * Therefore we need to do extra checks in order to find out
+        * if the provided file is an excell one or a simple zip.
+        *
+        * The best option is to use a try catch in order to catch any error.
+        */
         try {
           workbook=XLSX.read(data,{type:"buffer"});
         } catch(err) {
