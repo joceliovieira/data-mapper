@@ -40,7 +40,7 @@ module.exports=function(emmiter) {
 
         return entryLengthValidations(worksheet,(error,rowCount) => {
           if(error) {
-            return responseCallback(new Error('The excell file is not into the valid format. Please use the valid template from the provided template'))
+            return responseCallback(error)
           }
           iterateWorksheet(worksheet,rowCount,onReadCallback);
           return responseCallback(null,rowCount);
@@ -60,13 +60,13 @@ module.exports=function(emmiter) {
     const lastColumn = columnInfo[columnInfo.length-1].charAt(0);
 
     if( lastColumn!==config.excell.maxColumn ) {
-      return callback(new Error('The excell file is not into the valid format. Please use the valid template from the provided template'));
+      return callback(new Error('The excell file is not into the valid format. Please use the valid template from the provided template!'));
     }
 
     const rowCount = parseInt(columnInfo[columnInfo.length-1].substr(1));
-
+    console.log(rowCount);
     if(rowCount <= 1){
-      return callback(new Error('The excell file does not contain any entries'));
+      return callback(new Error('The excell file does not contain any entries at all!'));
     }
 
     callback(null,rowCount);
