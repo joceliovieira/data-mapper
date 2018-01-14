@@ -31,13 +31,14 @@ router.post('/data_assets',function(req,res,next){
                   'csrfToken':req.csrfToken() //Renew the CSRF token
   };
 
-  excellReader.readAllLinesFromXLSXBufferAndProcessWithACallback(req.files.data_assets.data,(error)=>{
+  excellReader.readAllLinesFromXLSXBufferAndProcessWithACallback(req.files.data_assets.data,(error,rowCount)=>{
     if(!res.headersSent) {
       if(error){
         response.message=error.message;
         return res.json(response);
       }
       response.status=true;
+      response.rowCount=rowCount;
       return res.json(response);
     }
   },(data,emmitter)=> {

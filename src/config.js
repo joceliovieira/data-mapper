@@ -82,7 +82,7 @@ if(process.env.EXCELL_UPLOAD){
 // DO NOT EDIT BELLOW THIS LINE
 
 const excellFormat={
-  'maxColumn':'Q' //To get modified via developers according to the spedifications
+  'maxColumn':'R' //To get modified via developers according to the spedifications
 }
 
 module.exports={

@@ -30,33 +30,54 @@ module.exports=function(emmiter) {
   self.readAllLinesFromXLSXBufferAndProcessWithACallback = function(data,responseCallback,onReadCallback) {
 
       const type=fileType(data);
-
-      if(type && type.mime==='application/x-msi'){
+      console.log(type);
+      // .xlsx files are zipped xml formats
+      if(type && (type.mime === 'application/x-msi' || type.mime === 'application/zip')){
         const workbook=XLSX.read(data,{type:"buffer"});
 
         const first_sheet_name = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[first_sheet_name];
 
-        let last_column=worksheet['!ref'].split(':');
-        last_column=last_column[last_column.length-1].charAt[0]
-        console.log("Last column: "+last_column);
-        if( last_column!==config.excell.maxColumn ) {
-          return responseCallback(new Error('The excell file is not into the valid format. Please use the valid template from the provided template'));
-        }
-        iterateWorksheet(worksheet,onReadCallback);
-        return responseCallback(null);
+        return entryLengthValidations(worksheet,(error,rowCount) => {
+          if(error) {
+            return responseCallback(new Error('The excell file is not into the valid format. Please use the valid template from the provided template'))
+          }
+          iterateWorksheet(worksheet,rowCount,onReadCallback);
+          return responseCallback(null,rowCount);
+        });
+
       } else {
-        // return _emmiter.emit('excell_read_error','File is not a valid Excell format');
         return responseCallback(new Error('You provided a non valid excell file'));
       }
   };
+
+  /**
+  *
+  */
+  const entryLengthValidations=function(worksheet,callback){
+
+    const columnInfo=worksheet['!ref'].split(':');
+    const lastColumn = columnInfo[columnInfo.length-1].charAt(0);
+
+    if( lastColumn!==config.excell.maxColumn ) {
+      return callback(new Error('The excell file is not into the valid format. Please use the valid template from the provided template'));
+    }
+
+    const rowCount = parseInt(columnInfo[columnInfo.length-1].substr(1));
+
+    if(rowCount <= 1){
+      return callback(new Error('The excell file does not contain any entries'));
+    }
+
+    callback(null,rowCount);
+  }
 
   /**
   * An ASYNCRONOUS function that iterates the worksheet of a workbook
   * @param {Object} worksheet The worksheet to Iterate.
   * @param {Function} callback A callback function that returns the data.
   */
-  const iterateWorksheet=function(worksheet,callback){
+  const iterateWorksheet=function(worksheet,rowCount,callback){
     process.nextTick(function(){
       //Use this one to get the column number: worksheet['!ref']
       //Count How many Columns the worksheet has It should have a predefined name of arrays
