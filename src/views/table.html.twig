@@ -12,12 +12,25 @@
     <div class="box">
       <div class="box-header">
         <div class="row">
-          <div class="col-sm-2 col-xs-6">
-            <button class="btn btn-primary btn-flat" role="button" id="trigger_upload">
-              <i class="fa fa-upload" aria-hidden="true"></i>&nbsp;Upload an Excell File
-            </button>
+          <div class="col-sm-6 col-xs-12 hidden-print">
+            <div class="btn-group hidden-xs" role="group" aria-label="Download and upload buttons">
+              <a class="btn btn-flat bg-olive" href="/data/template.xlsx">
+                <i class="fa fa-download" aria-hidden="true"></i>Download the Excell Template
+              </a>
+              <button class="btn btn-primary btn-flat" role="button" id="trigger_upload">
+                <i class="fa fa-upload" aria-hidden="true"></i>&nbsp;Upload an Excell File
+              </button>
+            </div>
+            <div class="visible-xs">
+              <a class="btn btn-flat btn-block bg-olive" href="/data/template.xlsx">
+                <i class="fa fa-download" aria-hidden="true"></i>Download the Excell Template
+              </a>
+              <button class="btn btn-primary btn-block btn-flat" role="button" id="trigger_upload">
+                <i class="fa fa-upload" aria-hidden="true"></i>&nbsp;Upload an Excell File
+              </button>
+            </div>
           </div>
-          <div class="col-xs-6">
+          <div class="col-xs-12 col-sm-6 hidden-print">
             <select id="version_select" class="select2" style="width:100%" name="version">
                   <option selected="selected" value="AL">Capone</option>
                   <option value="Chuck">Norris</option>
