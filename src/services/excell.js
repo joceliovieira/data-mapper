@@ -33,7 +33,13 @@ module.exports=function(emmiter) {
       console.log(type);
       // .xlsx files are zipped xml formats
       if(type && (type.mime === 'application/x-msi' || type.mime === 'application/zip')){
-        const workbook=XLSX.read(data,{type:"buffer"});
+
+        let workbook=null;
+        try {
+          workbook=XLSX.read(data,{type:"buffer"});
+        } catch(err) {
+          return responseCallback(new Error('You provided a non valid excell file.'));
+        }
 
         const first_sheet_name = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[first_sheet_name];
@@ -47,7 +53,7 @@ module.exports=function(emmiter) {
         });
 
       } else {
-        return responseCallback(new Error('You provided a non valid excell file'));
+        return responseCallback(new Error('You provided a non valid excell file.'));
       }
   };
 
@@ -81,7 +87,7 @@ module.exports=function(emmiter) {
     process.nextTick(function(){
       //Use this one to get the column number: worksheet['!ref']
       //Count How many Columns the worksheet has It should have a predefined name of arrays
-
+      console.log(worksheet);
     });
   }
 };
