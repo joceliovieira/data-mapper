@@ -1,4 +1,4 @@
 node_modules
 .env
 docker-volumes
-www/data/*.lock
+www/data/.~lock*#
