@@ -27,6 +27,6 @@ module.exports=function(emmiter,config){
   * @param {Object} row The row that contains the data
   */
   self.insertFromExcellRow=function(row){
-
+    
   }
 }
