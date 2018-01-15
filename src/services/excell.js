@@ -94,14 +94,14 @@ module.exports=function(emmiter) {
   * @param {Function} callback A callback function that returns each row data.
   */
   const iterateWorksheet=function(worksheet,maxRows,row,callback){
-    process.nextTick(function(){
 
+    process.nextTick(function(){
       //Skipping first row
       if(row==1){
         return iterateWorksheet(worksheet,maxRows,2,callback);
       }
 
-      if(row === maxRows){
+      if(row > maxRows){
         return;
       }
 
@@ -119,6 +119,7 @@ module.exports=function(emmiter) {
       });
 
       callback(rowData,emmiter);
+      return iterateWorksheet(worksheet,maxRows,row+1,callback);
     });
   }
 };
