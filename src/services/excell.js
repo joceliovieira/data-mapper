@@ -66,7 +66,8 @@ module.exports=function(emmiter) {
   };
 
   /**
-  *
+  * Calculate whether the excell spreadsheed has the correct column length and row length.
+  * @param {Object} worksheet The worksheet that needs length validation.
   */
   const entryLengthValidations=function(worksheet,callback){
 
