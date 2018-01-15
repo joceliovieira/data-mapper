@@ -8,9 +8,17 @@ const passport = require("passport");
 const EventEmitter = require('events');
 
 
-const config=require('./config');
+const config = require('./config');
+const Graph = require('./services/graph');
+const Excell = require('./services/excell');
 
+/*Generating Services*/
 const app=express();
+
+const emmiter=new EventEmitter();
+const excellReader = new Excell(config);
+const GraphMaker = new Graph(emmiter,config);
+
 
 app.use(bodyParser.urlencoded({extended:true,inflate:true}));
 app.use(cookieParser());
@@ -35,7 +43,6 @@ app.set('twig options', {
     strict_variables: false
 });
 
-const emmiter=new EventEmitter();
 
 
 const staticFiles=require('./controllers/static_files');
@@ -45,7 +52,7 @@ const user=require('./controllers/user');
 app.use('/',user);
 
 const PanelController=require('./controllers/panel');
-const panelController=new PanelController(app,emmiter);
+const panelController=new PanelController(app,emmiter,excellReader);
 
 app.get('/',function(req,res,next){
   // if (req.user) {

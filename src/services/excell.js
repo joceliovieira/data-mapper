@@ -5,14 +5,10 @@ const _=require('underscore');
 const config=require('../config');
 
 
-module.exports=function(emmiter) {
+module.exports=function(config) {
 
   const self=this;
 
-  /**
-  * @var A private instance of the local event emmiter
-  */
-  let _emmiter=emmiter;
 
   /**
   * Read the excell workbook based on template and process the results using a callback.
@@ -119,7 +115,7 @@ module.exports=function(emmiter) {
         }
       });
 
-      callback(rowData,emmiter);
+      callback(rowData);
       return iterateWorksheet(worksheet,maxRows,row+1,callback);
     });
   }

@@ -1,12 +1,9 @@
 const express = require('express');
 const fileUpload = require('express-fileupload');
-const Excell = require('../services/excell.js');
 
-function PanelController(expressApp,emmiter){
+function PanelController(expressApp,emmiter, excellReader){
 
   const router = express.Router();
-
-  const excellReader = new Excell(emmiter);
 
   router.use(fileUpload());
 
