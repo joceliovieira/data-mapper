@@ -82,7 +82,27 @@ if(process.env.EXCELL_UPLOAD){
 // DO NOT EDIT BELLOW THIS LINE
 
 const excellFormat={
-  'maxColumn':'R' //To get modified via developers according to the spedifications
+  'maxColumn':'R', //To get modified via developers according to the spedifications
+  'columnMap':{
+    'A':'dataId',
+    'B':'dataAsset',
+    'C':'dataSubject',
+    'D':'categoryInfo',
+    'E':'clasification',
+    'F':'source',
+    'G':'collectedBy',
+    'H':'collectionMethod',
+    'I':'access',
+    'J':'usedBy',
+    'K':'purpoce',
+    'L':'processingType',
+    'M':'dataTransefMechanism',
+    'N':'securityClassification',
+    'O':'securityControl',
+    'P':'storageOrData',
+    'Q':'retentionPolicy',
+    'R':'deletionPolicy'
+  }
 }
 
 module.exports={

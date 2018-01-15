@@ -1,7 +1,7 @@
 // const Excell = require('exceljs');
 if(typeof require !== 'undefined') XLSX = require('xlsx');
 const fileType = require('file-type');
-const stream = require('stream');
+const _=require('underscore');
 const config=require('../config');
 
 
@@ -56,7 +56,7 @@ module.exports=function(emmiter) {
           if(error) {
             return responseCallback(error)
           }
-          iterateWorksheet(worksheet,rowCount,onReadCallback);
+          iterateWorksheet(worksheet,rowCount,2,onReadCallback);//Start readinng on second row
           return responseCallback(null,rowCount);
         });
 
@@ -87,15 +87,38 @@ module.exports=function(emmiter) {
   }
 
   /**
-  * An ASYNCRONOUS function that iterates the worksheet of a workbook
+  * An ASYNCRONOUS function that iterates the worksheet of a workbook.
   * @param {Object} worksheet The worksheet to Iterate.
-  * @param {Function} callback A callback function that returns the data.
+  * @param {Int} maxRows Count how many rows have been iterated.
+  * @param {Int} row read the current row.
+  * @param {Function} callback A callback function that returns each row data.
   */
-  const iterateWorksheet=function(worksheet,rowCount,callback){
+  const iterateWorksheet=function(worksheet,maxRows,row,callback){
     process.nextTick(function(){
-      //Use this one to get the column number: worksheet['!ref']
-      //Count How many Columns the worksheet has It should have a predefined name of arrays
-      console.log(worksheet);
+
+      //Skipping first row
+      if(row==1){
+        return iterateWorksheet(worksheet,maxRows,2,callback);
+      }
+
+      if(row === maxRows){
+        return;
+      }
+
+      const alphas=_.range('A'.charCodeAt(0),config.excell.maxColumn.charCodeAt(0));
+
+      let rowData={};
+
+      _.each(alphas,(column) => {
+        column=String.fromCharCode(column);
+        const item=column+row;
+        const key=config.excell.columnMap[column];
+        if(worksheet[item] && key ){
+          rowData[key]=worksheet[item].v;
+        }
+      });
+
+      callback(rowData,emmiter);
     });
   }
 };
