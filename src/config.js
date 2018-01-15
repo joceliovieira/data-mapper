@@ -39,7 +39,11 @@ if(process.env.HTTP_PORT){
 
 //Config Neo4j connection
 if(process.env.NEO4J_HOST){
-  neo4jConfig.host=process.env.NEO4J_HOST;
+  if(process.env.NEO4J_HOST.lastIndexOf('bolt://',0)!==0){
+    neo4jConfig.host='bolt://'+process.env.NEO4J_HOST;
+  } else {
+    neo4jConfig.host=process.env.NEO4J_HOST;
+  }
 }
 
 if(process.env.NEO4J_USER){

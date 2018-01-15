@@ -8,6 +8,10 @@ module.exports=function(emmiter,config){
 
   let _neo4j=null;
   try {
+    if(config.neo4j.host.lastIndexOf('bolt://',0)!==0){
+      config.neo4j.host='bolt://'.config.neo4j.host
+    }
+
     if(config.neo4j.username && config.neo4j.password){
       _neo4j=neo4j.driver(config.neo4j.host,neo4j.auth.basic(config.neo4j.username,config.neo4j.password));
     } else {
