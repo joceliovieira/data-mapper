@@ -5,6 +5,8 @@ const session = require("express-session");
 const csrf = require('csurf');
 
 const passport = require("passport");
+const EventEmitter = require('events');
+
 
 const config=require('./config');
 
@@ -33,14 +35,17 @@ app.set('twig options', {
     strict_variables: false
 });
 
+const emmiter=new EventEmitter();
+
+
 const staticFiles=require('./controllers/static_files');
 app.use('/',staticFiles);
 
 const user=require('./controllers/user');
 app.use('/',user);
 
-const panel=require('./controllers/panel');
-app.use('/',panel);
+const PanelController=require('./controllers/panel');
+const panelController=new PanelController(app,emmiter);
 
 app.get('/',function(req,res,next){
   // if (req.user) {
