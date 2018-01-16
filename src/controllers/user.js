@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/login',function(req,res,next){
-  res.send('Login Form');
+router.get('/user/insert',function(req,res,next){
+  //Insert user
 });
-
 
 module.exports=router;

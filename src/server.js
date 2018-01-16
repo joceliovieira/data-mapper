@@ -16,6 +16,20 @@ const Excell = require('./services/excell');
 const app=express();
 
 const emmiter=new EventEmitter();
+
+//Handle Neo4j connection error
+emmiter.on('neo4j_connection_error',(message)=>{
+  console.error('Neo4j cannot connect');
+  console.error(message);
+  process.exit(1);
+});
+
+emmiter.on('mongodb_connection_error',(message)=>{
+  console.error('Mongodb cannot connect');
+  console.error(message);
+  process.exit(1);
+});
+
 const excellReader = new Excell(config);
 const GraphMaker = new Graph(emmiter,config);
 
@@ -33,8 +47,8 @@ app.use(function (req, res, next){
   next();
 });
 
-// app.use(passport.initialize());
-// app.use(passport.session());
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 app.set('views', __dirname + '/views');

@@ -18,7 +18,7 @@ module.exports=function(emmiter,config){
       _neo4j=neo4j.driver(config.neo4j.host);
     }
   } catch(error) {
-    console.error("Could not initialize neo4j connection: \n"+error.message);
+    emmiter.emmit('neo4j_connection_error',error.message);
   }
 
 
@@ -27,6 +27,6 @@ module.exports=function(emmiter,config){
   * @param {Object} row The row that contains the data
   */
   self.insertFromExcellRow=function(row){
-    
+
   }
 }

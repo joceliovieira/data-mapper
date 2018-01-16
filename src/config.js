@@ -112,7 +112,7 @@ const excellFormat={
 module.exports={
   'http':httpConfig,
   'neo4j':neo4jConfig,
-  'mongoDbConfig':mongoDbConfig,
+  'mongoDb':mongoDbConfig,
   'logs':logs,
   'excell':excellFormat,
 };
