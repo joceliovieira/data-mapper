@@ -8,8 +8,7 @@ module.exports=function(emmiter,config){
 
   let _neo4j=null;
   try {
-    console.log(config.neo4j.username);
-    console.log(config.neo4j.password);
+
     if(config.neo4j.username && config.neo4j.password){
       _neo4j=neo4j.driver(config.neo4j.host, neo4j.auth.basic(config.neo4j.username,config.neo4j.password));
     } else {
@@ -39,37 +38,36 @@ module.exports=function(emmiter,config){
         'pIIclasification':row.pIIclasification,
         'categoryInfo':row.categoryInfo,
         'appName':row.collectedBy,
-        'dataTranserMechanism':row.dataTranserMechanism,
         'securityControl':row.securityControl,
         'usedBy':row.usedBy,
         'whoCanAccess':row.access,
         'securityControl':row.securityControl,
-        'dataTranserMechanism':row.dataTranserMechanism,
+        'dataTransferMechanism':row.dataTranserMechanism,
+        'serviceName':row.collectedBy,
         'rowNum':rowNum
       }
-
+      console.log(row.dataTranserMechanism);
       //Inserting the most of the relationships
       let graphGenerationQuery='MERGE ({serviceName}:SERVER_OR_SERVICE { name: {serviceName} })<-[{dataid}:FROM]-( {usedBy}:DATA_CONSUMER {usedBy: {usedBy}, accessOrgPositions: {whoCanAccess}  } )-[:Accessing]->({dataid}:DATA_ASSET { id:{dataId} ,name:{dataAsset}, subject:{dataSubject}, classification:{clasification}  })-[:GETTING]->';
 
       //Relationship between Processing and application
-      let transmissionStorageServerRelationshipQuery='MERGE';
+      let transmissionStorageServerRelationshipQuery='MERGE ';
 
       let applicationDataAssetTransmissionSDotrageRelationship='MERGE ({dataId}:DATA_ASSET)-{:COLLECTED_BY}->({appName}:APPLICATION)';
 
       if(row.processingType.toLowerCase()==='transmission'){
-        graphGenerationQuery+='({rowNum}:TRANSMITTED { purpoce: {purpoce}, source: {source} , pIIclasification: {pIIclasification} , categoryInfo: {categoryInfo} })';
-        transmissionStorageServerRelationshipQuery+='({dataId}:TRANSMITTED)-[:INTO { mechanism: {dataTranserMechanism}, securityControl: {securityControl}}]->({serviceName}:SERVER_OR_SERVICE)';
-        applicationDataAssetTransmissionSDotrageRelationship+='<-[:FROM]-({dataId}:TRANSMITTED)';
+        graphGenerationQuery+='({rowNum}:TRANSMITTED { purpoce:{purpoce},source:{source},pIIclasification:{pIIclasification},categoryInfo:{categoryInfo} })';
+        transmissionStorageServerRelationshipQuery+='({dataId}:TRANSMITTED)-[:INTO { transferMechanism:{dataTransferMechanism}, securityControl:{securityControl}}]->({serviceName}:SERVER_OR_SERVICE)';
       } else if(row.processingType.toLowerCase()==='storage'){
-        graphGenerationQuery+='({rowNum}:STORED { purpoce: {purpoce}, source: {source} , pIIclasification: {pIIclasification} , categoryInfo: {categoryInfo} })';
-        transmissionStorageServerRelationshipQuery+='(:STORED)-[:INTO { mechanism: {dataTranserMechanism}, securityControl: {securityControl}}]->({serviceName}:SERVER_OR_SERVICE)';
-        applicationDataAssetTransmissionSDotrageRelationship+='<-[:FROM]-({dataId}:STORED)';
+        graphGenerationQuery+='({rowNum}:STORED { purpoce:{purpoce}, source:{source} , pIIclasification:{pIIclasification} , categoryInfo:{categoryInfo} })';
+        transmissionStorageServerRelationshipQuery+='(:STORED)-[:INTO { transferMechanism:{dataTransferMechanism}, securityControl:{securityControl}}]->({serviceName}:SERVER_OR_SERVICE)';
       }
 
       graphGenerationQuery+='-[:FROM]->({appName}:APPLICATION { name:{appName} })';
-      graphGenerationQuery+=applicationDataAssetTransmissionSDotrageRelationship+transmissionStorageServerRelationshipQuery;
+      graphGenerationQuery=graphGenerationQuery.replace(/\s/g, '');
+      graphGenerationQuery+=' '+applicationDataAssetTransmissionSDotrageRelationship.replace(/\s/g, '')+' '+transmissionStorageServerRelationshipQuery.replace(/\s/g, '');
 
-      session.run(graphGenerationQuery).then((data)=>{
+      session.run(graphGenerationQuery,values).then((data)=>{
         _emmiter.emit('inserted_row',rowNum);
         session.close();
       }).catch((error)=>{
