@@ -8,8 +8,10 @@ module.exports=function(emmiter,config){
 
   let _neo4j=null;
   try {
+    console.log(config.neo4j.username);
+    console.log(config.neo4j.password);
     if(config.neo4j.username && config.neo4j.password){
-      _neo4j=neo4j.driver(config.neo4j.host,neo4j.auth.basic(config.neo4j.username,config.neo4j.password));
+      _neo4j=neo4j.driver(config.neo4j.host, neo4j.auth.basic(config.neo4j.username,config.neo4j.password));
     } else {
       _neo4j=neo4j.driver(config.neo4j.host);
     }
@@ -68,10 +70,10 @@ module.exports=function(emmiter,config){
       graphGenerationQuery+=applicationDataAssetTransmissionSDotrageRelationship+transmissionStorageServerRelationshipQuery;
 
       session.run(graphGenerationQuery).then((data)=>{
-        emmiter.emit('inserted_row',rowNum);
+        _emmiter.emit('inserted_row',rowNum);
         session.close();
       }).catch((error)=>{
-        emmitter.emit('insert_row_error',error);
+        _emmiter.emit('insert_row_error',error);
         console.error(error);
       });
   }
