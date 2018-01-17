@@ -1,7 +1,7 @@
 const express = require('express');
 const fileUpload = require('express-fileupload');
 
-function PanelController(expressApp,emmiter, excellReader){
+function PanelController(expressApp, emmiter, excellReader, graphMaker){
 
   const router = express.Router();
 
@@ -39,9 +39,7 @@ function PanelController(expressApp,emmiter, excellReader){
         response.rowCount=rowCount;
         return res.json(response);
       }
-    },(data,emmitter)=> {
-      console.log("Read Line: ",data);
-    });
+    }, graphMaker.insertFromExcellRow);
   });
 
   //Getting the graph page

@@ -31,7 +31,7 @@ emmiter.on('mongodb_connection_error',(message)=>{
 });
 
 const excellReader = new Excell(config);
-const GraphMaker = new Graph(emmiter,config);
+const graphMaker = new Graph(emmiter,config);
 
 
 app.use(bodyParser.urlencoded({extended:true,inflate:true}));
@@ -66,7 +66,7 @@ const user=require('./controllers/user');
 app.use('/',user);
 
 const PanelController=require('./controllers/panel');
-const panelController=new PanelController(app,emmiter,excellReader);
+const panelController=new PanelController(app,emmiter,excellReader,graphMaker);
 
 app.get('/',function(req,res,next){
   // if (req.user) {
