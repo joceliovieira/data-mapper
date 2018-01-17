@@ -47,7 +47,7 @@ if(process.env.NEO4J_HOST){
 }
 
 if(process.env.NEO4J_USER){
-  neo4jConfig.user=process.env.NEO4J_USER;
+  neo4jConfig.username=process.env.NEO4J_USER;
 }
 
 if(process.env.NEO4J_PASSWORD){

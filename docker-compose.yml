@@ -35,7 +35,7 @@ services:
     environment:
       NEO4J_HOST: 'neo4j_dev'
       NEO4J_USER: 'neo4j'
-      NEO4J_PASSWORD: 'neo4j'
+      NEO4J_PASSWORD: 'neo45j'
       MONGO_CONNECTION_STRING: 'mongodb://mongodb:map_dev'
 
   neo4j_dev:
