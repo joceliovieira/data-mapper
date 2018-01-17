@@ -42,6 +42,7 @@ services:
     image: 'neo4j'
     ports:
       - '7474:7474'
+      - '7687:7487'
     volumes:
       - './docker-volumes/neo4j_dev/data:/data'
     environment:

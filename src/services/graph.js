@@ -32,10 +32,10 @@ module.exports=function(emmiter,config){
         'dataid':row.dataId,
         'dataAsset':row.dataAsset,
         'dataSubject':row.dataSubject,
-        'clasification':row.clasification,
         'purpoce':row.purpoce,
         'source':row.source,
         'pIIclasification':row.pIIclasification,
+        'securityClassification':row.securityClassification,
         'categoryInfo':row.categoryInfo,
         'appName':row.collectedBy,
         'securityControl':row.securityControl,
@@ -46,24 +46,24 @@ module.exports=function(emmiter,config){
         'serviceName':row.collectedBy,
         'rowNum':rowNum
       }
-      console.log(row.dataTranserMechanism);
+      console.log(values.serviceName);
       //Inserting the most of the relationships
-      let graphGenerationQuery='MERGE ({serviceName}:SERVER_OR_SERVICE { name: {serviceName} })<-[{dataid}:FROM]-( {usedBy}:DATA_CONSUMER {usedBy: {usedBy}, accessOrgPositions: {whoCanAccess}  } )-[:Accessing]->({dataid}:DATA_ASSET { id:{dataId} ,name:{dataAsset}, subject:{dataSubject}, classification:{clasification}  })-[:GETTING]->';
+      let graphGenerationQuery='MERGE (:SERVER_OR_SERVICE { name: {serviceName} })<-[:FROM {dataid:{dataid}}]-(:DATA_CONSUMER {usedBy: {usedBy}, accessOrgPositions: {whoCanAccess}  } )-[:Accessing]->(:DATA_ASSET {id:{dataid} ,name:{dataAsset}, subject:{dataSubject}, classification:{securityClassification}})-[:GETTING]->';
 
       //Relationship between Processing and application
       let transmissionStorageServerRelationshipQuery='MERGE ';
 
-      let applicationDataAssetTransmissionSDotrageRelationship='MERGE ({dataId}:DATA_ASSET)-{:COLLECTED_BY}->({appName}:APPLICATION)';
+      let applicationDataAssetTransmissionSDotrageRelationship='MERGE (:DATA_ASSET)-{:COLLECTED_BY}->(:APPLICATION {name:{appName}})';
 
       if(row.processingType.toLowerCase()==='transmission'){
-        graphGenerationQuery+='({rowNum}:TRANSMITTED { purpoce:{purpoce},source:{source},pIIclasification:{pIIclasification},categoryInfo:{categoryInfo} })';
-        transmissionStorageServerRelationshipQuery+='({dataId}:TRANSMITTED)-[:INTO { transferMechanism:{dataTransferMechanism}, securityControl:{securityControl}}]->({serviceName}:SERVER_OR_SERVICE)';
+        graphGenerationQuery+='(:TRANSMITTED { id:{rowNum},purpoce:{purpoce},source:{source},pIIclasification:{pIIclasification},categoryInfo:{categoryInfo} })';
+        transmissionStorageServerRelationshipQuery+='(:TRANSMITTED{id:{rowNum}})-[:INTO { transferMechanism:{dataTransferMechanism}, securityControl:{securityControl}}]->(:SERVER_OR_SERVICE {name:{serviceName}})';
       } else if(row.processingType.toLowerCase()==='storage'){
-        graphGenerationQuery+='({rowNum}:STORED { purpoce:{purpoce}, source:{source} , pIIclasification:{pIIclasification} , categoryInfo:{categoryInfo} })';
-        transmissionStorageServerRelationshipQuery+='(:STORED)-[:INTO { transferMechanism:{dataTransferMechanism}, securityControl:{securityControl}}]->({serviceName}:SERVER_OR_SERVICE)';
+        graphGenerationQuery+='(:STORED { id:{rowNum}, purpoce:{purpoce}, source:{source} , pIIclasification:{pIIclasification} , categoryInfo:{categoryInfo} })';
+        transmissionStorageServerRelationshipQuery+='(:STORED)-[:INTO { transferMechanism:{dataTransferMechanism}, securityControl:{securityControl}}]->(:SERVER_OR_SERVICE {name:{serviceName}})';
       }
 
-      graphGenerationQuery+='-[:FROM]->({appName}:APPLICATION { name:{appName} })';
+      graphGenerationQuery+='-[:FROM]->(:APPLICATION { name:{appName} })';
       graphGenerationQuery=graphGenerationQuery.replace(/\s/g, '');
       graphGenerationQuery+=' '+applicationDataAssetTransmissionSDotrageRelationship.replace(/\s/g, '')+' '+transmissionStorageServerRelationshipQuery.replace(/\s/g, '');
 
