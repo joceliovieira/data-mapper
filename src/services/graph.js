@@ -53,7 +53,7 @@ module.exports=function(emmiter,config){
       //Relationship between Processing and application
       let transmissionStorageServerRelationshipQuery='MERGE ';
 
-      let applicationDataAssetTransmissionSDotrageRelationship='MERGE (:DATA_ASSET {id:{dataid} ,name:{dataAsset}, subject:{dataSubject}, classification:{securityClassification}})-{:COLLECTED_BY}->(:APPLICATION {name:{appName}})';
+      let applicationDataAssetTransmissionSDotrageRelationship='MERGE (:DATA_ASSET {id:{dataid} ,name:{dataAsset}, subject:{dataSubject}, classification:{securityClassification}})-[:COLLECTED_BY]->(:APPLICATION {name:{appName}})';
 
       if(row.processingType.toLowerCase()==='transmission'){
         graphGenerationQuery+='(:TRANSMITTED { id:{rowNum},purpoce:{purpoce},source:{source},pIIclasification:{pIIclasification},categoryInfo:{categoryInfo} })';
