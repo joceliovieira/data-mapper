@@ -53,7 +53,7 @@ module.exports=function(emmiter,config){
       //Relationship between Processing and application
       let transmissionStorageServerRelationshipQuery='MERGE ';
 
-      let applicationDataAssetTransmissionSDotrageRelationship='MERGE (:DATA_ASSET)-{:COLLECTED_BY}->(:APPLICATION {name:{appName}})';
+      let applicationDataAssetTransmissionSDotrageRelationship='MERGE (:DATA_ASSET {id:{dataid} ,name:{dataAsset}, subject:{dataSubject}, classification:{securityClassification}})-{:COLLECTED_BY}->(:APPLICATION {name:{appName}})';
 
       if(row.processingType.toLowerCase()==='transmission'){
         graphGenerationQuery+='(:TRANSMITTED { id:{rowNum},purpoce:{purpoce},source:{source},pIIclasification:{pIIclasification},categoryInfo:{categoryInfo} })';
@@ -65,11 +65,13 @@ module.exports=function(emmiter,config){
 
       graphGenerationQuery+='-[:FROM]->(:APPLICATION { name:{appName} })';
       graphGenerationQuery=graphGenerationQuery.replace(/\s/g, '');
-      graphGenerationQuery+=' '+applicationDataAssetTransmissionSDotrageRelationship.replace(/\s/g, '')+' '+transmissionStorageServerRelationshipQuery.replace(/\s/g, '');
+      // graphGenerationQuery+=' '+applicationDataAssetTransmissionSDotrageRelationship.replace(/\s/g, '')+' '+transmissionStorageServerRelationshipQuery.replace(/\s/g, '');
 
       session.run(graphGenerationQuery,values).then((data)=>{
-        _emmiter.emit('inserted_row',rowNum);
-        session.close();
+        // _emmiter.emit('inserted_row',rowNum);
+        return session.run(applicationDataAssetTransmissionSDotrageRelationship,values);
+      }).then((data)=>{
+        return session.run(transmissionStorageServerRelationshipQuery,values);
       }).catch((error)=>{
         _emmiter.emit('insert_row_error',error);
         console.error(error);

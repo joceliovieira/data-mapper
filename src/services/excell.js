@@ -115,7 +115,7 @@ module.exports=function(config) {
         }
       });
 
-      callback(rowData);
+      callback(rowData,row);
       return iterateWorksheet(worksheet,maxRows,row+1,callback);
     });
   }
