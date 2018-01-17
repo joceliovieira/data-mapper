@@ -24,7 +24,7 @@ module.exports=function(emmiter,config){
   */
   self.insertFromExcellRow=function(row,rowNum){
 
-      const session = driver.session();
+      const session = _neo4j.session();
 
       //The replacement of the values where it will get stored in neo4j
       const values={
@@ -67,7 +67,7 @@ module.exports=function(emmiter,config){
       graphGenerationQuery+='-[:FROM]->({appName}:APPLICATION { name:{appName} })';
       graphGenerationQuery+=applicationDataAssetTransmissionSDotrageRelationship+transmissionStorageServerRelationshipQuery;
 
-      session.run(query).then((data)=>{
+      session.run(graphGenerationQuery).then((data)=>{
         emmiter.emit('inserted_row',rowNum);
         session.close();
       }).catch((error)=>{
