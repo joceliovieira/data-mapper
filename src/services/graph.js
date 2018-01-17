@@ -77,4 +77,15 @@ module.exports=function(emmiter,config){
         console.error(error);
       });
   }
+
+  /**
+  * Method that retrieves the data into a table view.
+  * @param {Int} page The pegination index.
+  * @param {Int} limit The pagination limit.
+  * @param {Fuction} callback
+  */
+  self.fetchDataAsTable=function(page,limit,callback) {
+
+  };
+
 }
