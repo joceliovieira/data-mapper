@@ -115,8 +115,11 @@ module.exports=function(config) {
         }
       });
 
-      callback(rowData,row);
-      return iterateWorksheet(worksheet,maxRows,row+1,callback);
+      return callback(rowData,(error)=>{
+        if(!error){
+          return iterateWorksheet(worksheet,maxRows,row+1,callback);
+        }
+      });
     });
   }
 };

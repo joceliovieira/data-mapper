@@ -1,4 +1,5 @@
 const neo4j = require('neo4j-driver').v1;
+const moment = require('moment');
 
 module.exports=function(emmiter,config){
 
@@ -18,64 +19,70 @@ module.exports=function(emmiter,config){
     emmiter.emmit('neo4j_connection_error',error.message);
   }
 
+  const generateUniqueLabel=function(prefix){
+    return prefix+moment.utc().format(x);
+  }
 
   /**
   * Insert a row of the excell-like data.
   * @param {Object} row The row that contains the data
   */
-  self.insertFromExcellRow=function(row,rowNum){
+  self.insertFromExcellRow=function(row,callback){
 
-      const session = _neo4j.session();
+      const session = _neo4j.session()
+      const transaction= session.beginTransaction();
+
+      const errorHandler=(error)=>{
+        _emmiter.emit('insert_row_error',error);
+        console.error(error);
+        session.close();
+        callback(error);
+      }
 
       //The replacement of the values where it will get stored in neo4j
       const values={
-        'dataid':row.dataId,
-        'dataAsset':row.dataAsset,
-        'dataSubject':row.dataSubject,
-        'purpoce':row.purpoce,
-        'source':row.source,
-        'pIIclasification':row.pIIclasification,
-        'securityClassification':row.securityClassification,
-        'categoryInfo':row.categoryInfo,
-        'appName':row.collectedBy,
-        'securityControl':row.securityControl,
-        'usedBy':row.usedBy,
-        'whoCanAccess':row.access,
-        'securityControl':row.securityControl,
-        'dataTransferMechanism':row.dataTranserMechanism,
-        'serviceName':row.collectedBy,
-        'rowNum':rowNum
-      }
-      console.log(values.serviceName);
-      //Inserting the most of the relationships
-      let graphGenerationQuery='MERGE (:SERVER_OR_SERVICE { name: {serviceName} })<-[:FROM {dataid:{dataid}}]-(:DATA_CONSUMER {usedBy: {usedBy}, accessOrgPositions: {whoCanAccess}  } )-[:Accessing]->(:DATA_ASSET {id:{dataid} ,name:{dataAsset}, subject:{dataSubject}, classification:{securityClassification}})-[:GETTING]->';
-
-      //Relationship between Processing and application
-      let transmissionStorageServerRelationshipQuery='MERGE ';
-
-      let applicationDataAssetTransmissionSDotrageRelationship='MERGE (:DATA_ASSET {id:{dataid} ,name:{dataAsset}, subject:{dataSubject}, classification:{securityClassification}})-[:COLLECTED_BY]->(:APPLICATION {name:{appName}})';
-
-      if(row.processingType.toLowerCase()==='transmission'){
-        graphGenerationQuery+='(:TRANSMITTED { id:{rowNum},purpoce:{purpoce},source:{source},pIIclasification:{pIIclasification},categoryInfo:{categoryInfo} })';
-        transmissionStorageServerRelationshipQuery+='(:TRANSMITTED{id:{rowNum}})-[:INTO { transferMechanism:{dataTransferMechanism}, securityControl:{securityControl}}]->(:SERVER_OR_SERVICE {name:{serviceName}})';
-      } else if(row.processingType.toLowerCase()==='storage'){
-        graphGenerationQuery+='(:STORED { id:{rowNum}, purpoce:{purpoce}, source:{source} , pIIclasification:{pIIclasification} , categoryInfo:{categoryInfo} })';
-        transmissionStorageServerRelationshipQuery+='(:STORED)-[:INTO { transferMechanism:{dataTransferMechanism}, securityControl:{securityControl}}]->(:SERVER_OR_SERVICE {name:{serviceName}})';
+        'dataid':row.dataId.trim(),
+        'dataAsset':row.dataAsset.trim(),
+        'purpoce':row.purpoce.trim(),
+        'dataSubject':row.dataSubject.trim(),
+        'source':row.source.trim(),
+        'pIIclasification':row.pIIclasification.trim(),
+        'securityClassification':row.securityClassification.trim(),
+        'categoryInfo':row.categoryInfo.trim(),
+        'appName':row.collectedBy.trim(),
+        'securityControl':row.securityControl.trim(),
+        'usedBy':row.usedBy.trim(),
+        'whoCanAccess':row.access.trim(),
+        'securityControl':row.securityControl.trim(),
+        'dataTransferMechanism':row.dataTranserMechanism.trim(),
+        'serviceName':row.collectedBy.trim(),
+        'serverOrService':row.storageOrData.trim(),
+        'processingType':row.processingType.trim(),
       }
 
-      graphGenerationQuery+='-[:FROM]->(:APPLICATION { name:{appName} })';
-      graphGenerationQuery=graphGenerationQuery.replace(/\s/g, '');
-      // graphGenerationQuery+=' '+applicationDataAssetTransmissionSDotrageRelationship.replace(/\s/g, '')+' '+transmissionStorageServerRelationshipQuery.replace(/\s/g, '');
 
-      session.run(graphGenerationQuery,values).then((data)=>{
-        // _emmiter.emit('inserted_row',rowNum);
-        return session.run(applicationDataAssetTransmissionSDotrageRelationship,values);
-      }).then((data)=>{
-        return session.run(transmissionStorageServerRelationshipQuery,values);
-      }).catch((error)=>{
-        _emmiter.emit('insert_row_error',error);
-        console.error(error);
-      });
+
+      let query=`MERGE (DATA_ASSET:DATA_ASSET {id:{dataid} ,name:{dataAsset}, subject:{dataSubject}, classification:{securityClassification}})
+      MERGE (SERVER_OR_SERVICE:SERVER_OR_SERVICE { name: {serverOrService} })
+      MERGE (APPLICATION:APPLICATION { name:{appName} })
+      MERGE (DATA_CONSUMER:DATA_CONSUMER {usedBy: {usedBy}, accessOrgPositions: {whoCanAccess}})
+      MERGE (PROSESED:PROSESED{ id:{dataid},type:{processingType},purpoce:{purpoce},source:{source},pIIclasification:{pIIclasification},categoryInfo:{categoryInfo} })
+      MERGE (DATA_CONSUMER)-[:ACCESSING]->(DATA_ASSET)
+      MERGE (SERVER_OR_SERVICE)<-[:FROM]-(DATA_CONSUMER)
+      MERGE (DATA_ASSET)-[:COLLECTED_BY]->(APPLICATION)
+      MERGE (DATA_ASSET)-[:GETS]->(PROSESED)
+      MERGE (PROSESED)-[:FROM]->(APPLICATION)
+      MERGE (PROSESED)-[:INTO { transferMechanism:{dataTransferMechanism}, securityControl:{securityControl}}]->(SERVER_OR_SERVICE)
+      `;
+
+      transaction.run(query,values).then((data)=>{
+          transaction.commit().then((data)=>{
+              console.log('Success');
+              self.fetchDataAsTable();
+              session.close();
+              callback(null);
+          }).catch(errorHandler);
+      }).catch(errorHandler);
   }
 
   /**
@@ -85,7 +92,14 @@ module.exports=function(emmiter,config){
   * @param {Fuction} callback
   */
   self.fetchDataAsTable=function(page,limit,callback) {
+    const session = _neo4j.session();
 
+    let fetchQuery="MATCH (d:DATA_ASSET {id:'0001'}) RETURN d.id";
+
+    session.run(fetchQuery).then((data)=>{
+      console.log("Fetched Data: ")
+      console.log(data.records);
+    });
   };
 
 }
