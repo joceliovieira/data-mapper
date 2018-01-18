@@ -78,7 +78,6 @@ module.exports=function(emmiter,config){
       transaction.run(query,values).then((data)=>{
           transaction.commit().then((data)=>{
               console.log('Success');
-              self.fetchDataAsTable();
               session.close();
               callback(null);
           }).catch(errorHandler);
