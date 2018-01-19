@@ -69,7 +69,7 @@ module.exports=function(emmiter,config){
       MERGE (PROSESED:PROSESED{ id:{dataid},type:{processingType},purpoce:{purpoce},source:{source},pIIclasification:{pIIclasification},categoryInfo:{categoryInfo} })
       MERGE (DATA_CONSUMER)-[:ACCESSING]->(DATA_ASSET)
       MERGE (SERVER_OR_SERVICE)<-[:FROM]-(DATA_CONSUMER)
-      MERGE (DATA_ASSET)-[:COLLECTED_BY]->(APPLICATION)
+      MERGE (DATA_ASSET)-[:COLLECTED_BY { method: }]->(APPLICATION)
       MERGE (DATA_ASSET)-[:GETS]->(PROSESED)
       MERGE (PROSESED)-[:FROM]->(APPLICATION)
       MERGE (PROSESED)-[:INTO { transferMechanism:{dataTransferMechanism}, securityControl:{securityControl}}]->(SERVER_OR_SERVICE)
@@ -92,6 +92,16 @@ module.exports=function(emmiter,config){
   */
   self.fetchDataAsTable=function(page,limit,callback) {
     const session = _neo4j.session();
+
+    /**
+    MATCH (D:DATA_ASSET)-[:GETS]->(PROSESSED:PROSESED)-[INTO:INTO]->(SERVER_OR_SERVICE:SERVER_OR_SERVICE)<-[:FROM]-(DC:DATA_CONSUMER)-[:ACCESSING]->(D2:DATA_ASSET)-[COLLECTED_BY:COLLECTED_BY]->(APPLICATION:APPLICATION)<-[:FROM]-(PROSESSED2:PROSESED)
+WHERE D.id=D2.id AND PROSESSED2.id=PROSESSED.id AND D.id=PROSESSED.id AND D2.id=PROSESSED2.id
+RETURN D.id, D.name,D.subject,PROSESSED.pIIclasification,PROSESSED.source,
+APPLICATION.name,DC.accessOrgPositions,DC.usedBy,PROSESSED.purpoce,
+D.classification,PROSESSED.type,PROSESSED.categoryInfo,
+INTO.transferMechanism,INTO.securityControl,
+SERVER_OR_SERVICE.name
+    */
 
     let fetchQuery="MATCH (d:DATA_ASSET {id:'0001'}) RETURN d.id";
 
