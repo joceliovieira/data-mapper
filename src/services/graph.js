@@ -58,6 +58,7 @@ module.exports=function(emmiter,config){
         'serviceName':row.collectedBy.trim(),
         'serverOrService':row.storageOrData.trim(),
         'processingType':row.processingType.trim(),
+        'collectionMethod':row.collectionMethod.trim(),
       }
 
 
@@ -66,10 +67,10 @@ module.exports=function(emmiter,config){
       MERGE (SERVER_OR_SERVICE:SERVER_OR_SERVICE { name: {serverOrService} })
       MERGE (APPLICATION:APPLICATION { name:{appName} })
       MERGE (DATA_CONSUMER:DATA_CONSUMER {usedBy: {usedBy}, accessOrgPositions: {whoCanAccess}})
-      MERGE (PROSESED:PROSESED{ id:{dataid},type:{processingType},purpoce:{purpoce},source:{source},pIIclasification:{pIIclasification},categoryInfo:{categoryInfo} })
+      MERGE (PROSESED:PROSESED{ id:{dataid},type:{processingType},source:{source},pIIclasification:{pIIclasification},categoryInfo:{categoryInfo} })
       MERGE (DATA_CONSUMER)-[:ACCESSING]->(DATA_ASSET)
       MERGE (SERVER_OR_SERVICE)<-[:FROM]-(DATA_CONSUMER)
-      MERGE (DATA_ASSET)-[:COLLECTED_BY { method: }]->(APPLICATION)
+      MERGE (DATA_ASSET)-[:COLLECTED_BY { method: {collectionMethod}, purpoce:{purpoce} }]->(APPLICATION)
       MERGE (DATA_ASSET)-[:GETS]->(PROSESED)
       MERGE (PROSESED)-[:FROM]->(APPLICATION)
       MERGE (PROSESED)-[:INTO { transferMechanism:{dataTransferMechanism}, securityControl:{securityControl}}]->(SERVER_OR_SERVICE)
