@@ -64,10 +64,10 @@ module.exports=function(emmiter,config){
 
 
 
-      let query=`MERGE (DATA_ASSET:DATA_ASSET { type:'data_asset', id:{dataid} ,asset_name:{dataAsset}, subject:{dataSubject}, classification:{securityClassification}, categoryInfo:{categoryInfo}})
-      MERGE (SERVER_OR_SERVICE:SERVER_OR_SERVICE { type:'server_service', name: {serverOrService} })
-      MERGE (APPLICATION:APPLICATION { type:'application', name:{appName} })
-      MERGE (DATA_CONSUMER:DATA_CONSUMER {type:'data_consumer', usedBy: {usedBy}, accessOrgPositions: {whoCanAccess}})
+      let query=`MERGE (DATA_ASSET:DATA_ASSET { id:{dataid} ,asset_name:{dataAsset}, subject:{dataSubject}, classification:{securityClassification}, categoryInfo:{categoryInfo}})
+      MERGE (SERVER_OR_SERVICE:SERVER_OR_SERVICE { name: {serverOrService} })
+      MERGE (APPLICATION:APPLICATION { name:{appName} })
+      MERGE (DATA_CONSUMER:DATA_CONSUMER { usedBy: {usedBy}, accessOrgPositions: {whoCanAccess}})
       MERGE (PROSESED:PROSESED { type:{processingType}, source:{source},pIIclasification:{pIIclasification} })
       MERGE (DATA_CONSUMER)-[:ACCESSING]->(DATA_ASSET)
       MERGE (SERVER_OR_SERVICE)<-[:FROM]-(DATA_CONSUMER)
@@ -82,8 +82,11 @@ module.exports=function(emmiter,config){
           transaction.commit().then((data)=>{
               times_called++;
               console.log('Success'+times_called);
-              self.fetchDataAsGraph((error)=>{
-                console.error(error);
+              self.fetchDataAsGraph((error,data)=>{
+                if(error){
+                  console.error(error);
+                }
+                console.log(data);
               });
               session.close();
               callback(null);
@@ -105,35 +108,37 @@ module.exports=function(emmiter,config){
     };
 
 
-    session.run("MATCH (p) RETURN p, ID(p)").then( (data) =>{
+    session.run("MATCH (p) RETURN p").then( (data) =>{
       //get the session data
       return_data.nodes=_.map(data.records,(obj)=>{
-        const value=obj._fields[0];
+        const value={
+          id:obj._fields[0].identity.low,
+          properties:obj._fields[0].properties,
+          type: obj._fields[0].labels[0],
+          node_type: obj._fields[0].labels[0]
+        };
 
         switch(value.type){
-          case 'data_asset':
-            value.data_id=value.id;
+          case 'DATA_ASSET':
+            value.caption=value.id;
             break;
           //Append here for any node info manupulation
         }
-
-        //Always put an id
-        value.id=obj._fields[1];
-
+        console.log(obj._fields[0]);
         return value;
       });
 
       return session.run('MATCH (p1)-[n]->(p2) return n').then((relationship_data)=>{
-        return_data.edges=_.map(relationship_data.records,(obj) => {
+        return_data.edges=_.map(relationship_data.records, (obj) => {
           const value ={
             caption:obj._fields[0].type,
             source: obj._fields[0].start.low,
-            target: obj._fields.end.low
-          };// obj._fields[0];
-          console.log(value);
+            target: obj._fields[0].end.low,
+            properties:obj._fields[0].properties
+          };
           return value;
         });
-
+        callback(null,return_data)
         session.close();
       }).catch((error)=>{
         callback(error);
