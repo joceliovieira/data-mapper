@@ -1,5 +1,6 @@
 const neo4j = require('neo4j-driver').v1;
 const moment = require('moment');
+const _ = require('underscore');
 
 module.exports=function(emmiter,config){
 
@@ -63,11 +64,11 @@ module.exports=function(emmiter,config){
 
 
 
-      let query=`MERGE (DATA_ASSET:DATA_ASSET {id:{dataid} ,name:{dataAsset}, subject:{dataSubject}, classification:{securityClassification}, categoryInfo:{categoryInfo}})
-      MERGE (SERVER_OR_SERVICE:SERVER_OR_SERVICE { name: {serverOrService} })
-      MERGE (APPLICATION:APPLICATION { name:{appName} })
-      MERGE (DATA_CONSUMER:DATA_CONSUMER {usedBy: {usedBy}, accessOrgPositions: {whoCanAccess}})
-      MERGE (PROSESED:PROSESED { type:{processingType},source:{source},pIIclasification:{pIIclasification} })
+      let query=`MERGE (DATA_ASSET:DATA_ASSET { type:'data_asset', id:{dataid} ,asset_name:{dataAsset}, subject:{dataSubject}, classification:{securityClassification}, categoryInfo:{categoryInfo}})
+      MERGE (SERVER_OR_SERVICE:SERVER_OR_SERVICE { type:'server_service', name: {serverOrService} })
+      MERGE (APPLICATION:APPLICATION { type:'application', name:{appName} })
+      MERGE (DATA_CONSUMER:DATA_CONSUMER {type:'data_consumer', usedBy: {usedBy}, accessOrgPositions: {whoCanAccess}})
+      MERGE (PROSESED:PROSESED { type:{processingType}, source:{source},pIIclasification:{pIIclasification} })
       MERGE (DATA_CONSUMER)-[:ACCESSING]->(DATA_ASSET)
       MERGE (SERVER_OR_SERVICE)<-[:FROM]-(DATA_CONSUMER)
       MERGE (DATA_ASSET)-[:COLLECTED_BY { method: {collectionMethod}, purpoce:{purpoce} }]->(APPLICATION)
@@ -75,9 +76,15 @@ module.exports=function(emmiter,config){
       MERGE (PROSESED)-[:FROM]->(APPLICATION)
       MERGE (PROSESED)-[:INTO { data_id:{dataid}, transferMechanism:{dataTransferMechanism}, securityControl:{securityControl}}]->(SERVER_OR_SERVICE)`;
 
+      let times_called=0;
+
       transaction.run(query,values).then((data)=>{
           transaction.commit().then((data)=>{
-              console.log('Success');
+              times_called++;
+              console.log('Success'+times_called);
+              self.fetchDataAsGraph((error)=>{
+                console.error(error);
+              });
               session.close();
               callback(null);
           }).catch(errorHandler);
@@ -85,30 +92,56 @@ module.exports=function(emmiter,config){
   }
 
   /**
-  * Method that retrieves the data into a table view.
-  * @param {Int} page The pegination index.
-  * @param {Int} limit The pagination limit.
-  * @param {Fuction} callback
+  * Get the graph in a formm that is renderable with Alchemy.js
+  * @param {Function} callback The callback that returns the data or an error
   */
-  self.fetchDataAsTable=function(page,limit,callback) {
+  self.fetchDataAsGraph=function(callback){
+
     const session = _neo4j.session();
 
-    /**
-    MATCH (D:DATA_ASSET)-[:GETS]->(PROSESSED:PROSESED)-[INTO:INTO]->(SERVER_OR_SERVICE:SERVER_OR_SERVICE)<-[:FROM]-(DC:DATA_CONSUMER)-[:ACCESSING]->(D2:DATA_ASSET)-[COLLECTED_BY:COLLECTED_BY]->(APPLICATION:APPLICATION)<-[:FROM]-(PROSESSED2:PROSESED)
-WHERE D.id=D2.id AND PROSESSED2.id=PROSESSED.id AND D.id=PROSESSED.id AND D2.id=PROSESSED2.id
-RETURN D.id, D.name,D.subject,PROSESSED.pIIclasification,PROSESSED.source,
-APPLICATION.name,DC.accessOrgPositions,DC.usedBy,PROSESSED.purpoce,
-D.classification,PROSESSED.type,PROSESSED.categoryInfo,
-INTO.transferMechanism,INTO.securityControl,
-SERVER_OR_SERVICE.name
-    */
+    const return_data={
+      nodes:[],
+      edges:[]
+    };
 
-    let fetchQuery="MATCH (d:DATA_ASSET {id:'0001'}) RETURN d.id";
 
-    session.run(fetchQuery).then((data)=>{
-      console.log("Fetched Data: ")
-      console.log(data.records);
-    });
-  };
+    session.run("MATCH (p) RETURN p, ID(p)").then( (data) =>{
+      //get the session data
+      return_data.nodes=_.map(data.records,(obj)=>{
+        const value=obj._fields[0];
+
+        switch(value.type){
+          case 'data_asset':
+            value.data_id=value.id;
+            break;
+          //Append here for any node info manupulation
+        }
+
+        //Always put an id
+        value.id=obj._fields[1];
+
+        return value;
+      });
+
+      return session.run('MATCH (p1)-[n]->(p2) return n').then((relationship_data)=>{
+        return_data.edges=_.map(relationship_data.records,(obj) => {
+          const value ={
+            caption:obj._fields[0].type,
+            source: obj._fields[0].start.low,
+            target: obj._fields.end.low
+          };// obj._fields[0];
+          console.log(value);
+          return value;
+        });
+
+        session.close();
+      }).catch((error)=>{
+        callback(error);
+      });
+    }).catch((error)=>{
+      callback(error);
+    })
+
+  }
 
 }
