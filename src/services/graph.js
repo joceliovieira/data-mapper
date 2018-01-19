@@ -63,18 +63,17 @@ module.exports=function(emmiter,config){
 
 
 
-      let query=`MERGE (DATA_ASSET:DATA_ASSET {id:{dataid} ,name:{dataAsset}, subject:{dataSubject}, classification:{securityClassification}})
+      let query=`MERGE (DATA_ASSET:DATA_ASSET {id:{dataid} ,name:{dataAsset}, subject:{dataSubject}, classification:{securityClassification}, categoryInfo:{categoryInfo}})
       MERGE (SERVER_OR_SERVICE:SERVER_OR_SERVICE { name: {serverOrService} })
       MERGE (APPLICATION:APPLICATION { name:{appName} })
       MERGE (DATA_CONSUMER:DATA_CONSUMER {usedBy: {usedBy}, accessOrgPositions: {whoCanAccess}})
-      MERGE (PROSESED:PROSESED{ id:{dataid},type:{processingType},source:{source},pIIclasification:{pIIclasification},categoryInfo:{categoryInfo} })
+      MERGE (PROSESED:PROSESED { type:{processingType},source:{source},pIIclasification:{pIIclasification} })
       MERGE (DATA_CONSUMER)-[:ACCESSING]->(DATA_ASSET)
       MERGE (SERVER_OR_SERVICE)<-[:FROM]-(DATA_CONSUMER)
       MERGE (DATA_ASSET)-[:COLLECTED_BY { method: {collectionMethod}, purpoce:{purpoce} }]->(APPLICATION)
       MERGE (DATA_ASSET)-[:GETS]->(PROSESED)
       MERGE (PROSESED)-[:FROM]->(APPLICATION)
-      MERGE (PROSESED)-[:INTO { transferMechanism:{dataTransferMechanism}, securityControl:{securityControl}}]->(SERVER_OR_SERVICE)
-      `;
+      MERGE (PROSESED)-[:INTO { data_id:{dataid}, transferMechanism:{dataTransferMechanism}, securityControl:{securityControl}}]->(SERVER_OR_SERVICE)`;
 
       transaction.run(query,values).then((data)=>{
           transaction.commit().then((data)=>{
