@@ -2,6 +2,7 @@
 
 {% block css %}
 <link rel="stylesheet" href="/css/select2.min.css" />
+<link rel="stylesheet" href="/css/font-awesome-animation.min.css" />
 {% endblock %}
 
 {% block content %}
@@ -31,7 +32,7 @@
       </div>
       <div class="box-body">
         <div id="no_selected" class="row" style="text-align:center">
-            <p><i class="fa fa-asterisk fa-3x"></i></p>
+            <p><i class="fa fa-hand-o-left faa-horizontal animated fa-3x"></i></p>
             <p><span class="text-lead">Select a node or a link in order to display infomration about it</span></p>
         </div>
       </div>
@@ -43,12 +44,24 @@
 {% block javascripts %}
 
 <script src="/js/select2.min.js"></script>
+<script src="/js/d3.min.js"></script>
 <script>
   $(document).ready(function(){
     $("#version_select").select2();
 
   });
 
-  var load_
+  /**
+  * Loads the graph data via ajax
+  */
+  var loadGraphData=function(callback){
+    $.get('/flow-map/graph').done(function(data){
+      callback(data);
+    }).error(function(){
+      
+    }).always(function(){
+      console.log("Ajax finished");
+    });
+  }
 </script>
 {% endblock %}
