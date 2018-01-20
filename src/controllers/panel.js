@@ -49,6 +49,15 @@ function PanelController(expressApp, emmiter, excellReader, graphMaker){
     });
   });
 
+  router.get('/flow-map/graph',function(req,res,next){
+    graphMaker.fetchDataAsGraph((error,data)=>{
+      if(error){
+        return res.status(500).json({'message':'An error occured','info':error.message})
+      }
+      res.json(data);
+    })
+  });
+
   expressApp.use('/',router);
 };
 

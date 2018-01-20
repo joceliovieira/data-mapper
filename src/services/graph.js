@@ -82,12 +82,6 @@ module.exports=function(emmiter,config){
           transaction.commit().then((data)=>{
               times_called++;
               console.log('Success'+times_called);
-              self.fetchDataAsGraph((error,data)=>{
-                if(error){
-                  console.error(error);
-                }
-                console.log(data);
-              });
               session.close();
               callback(null);
           }).catch(errorHandler);
