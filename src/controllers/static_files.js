@@ -10,6 +10,7 @@ router.use('/js', [
   express.static(__dirname + '/../../node_modules/datatables/media/js'),
   express.static(__dirname + '/../../node_modules/datatables-bootstrap/js'),
   express.static(__dirname + '/../../node_modules/select2/dist/js'),
+  express.static(__dirname + '/../../node_modules/d3/build'),
   express.static(__dirname + '/../../www/js')
 ]);
 
