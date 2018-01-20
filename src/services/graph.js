@@ -109,16 +109,8 @@ module.exports=function(emmiter,config){
           id:obj._fields[0].identity.low,
           properties:obj._fields[0].properties,
           type: obj._fields[0].labels[0],
-          node_type: obj._fields[0].labels[0]
         };
 
-        switch(value.type){
-          case 'DATA_ASSET':
-            value.caption=value.id;
-            break;
-          //Append here for any node info manupulation
-        }
-        console.log(obj._fields[0]);
         return value;
       });
 
