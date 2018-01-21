@@ -17,7 +17,7 @@
             </select>
         </div>
         <div class="class=col-xs-12">
-          <div id="graph_display"></div>
+          <div id="graph_display" style="width: 500px;height: 500px; display: block;"></div>
         </div>
       </div>
     </div>
@@ -45,12 +45,11 @@
 {% block javascripts %}
 
 <script src="/js/select2.min.js"></script>
+<script src="/js/cytoscape.js"></script>
 <script>
   $(document).ready(function(){
     $("#version_select").select2();
-    loadGraphData(function(data){
-      console.log(data);
-    });
+      loadGraphData(renderGraph);
   });
 
   /**
@@ -65,6 +64,81 @@
     }).always(function(){
       console.log("Ajax finished");
     });
+  }
+
+  var renderGraph=function(data) {
+    var config = {
+      container: document.getElementById('graph_display'),
+      elements:{
+        nodes:[],
+        edges:[]
+      },
+      layout: {
+        name: 'cose',
+      },
+      ready: function(){
+        window.cy = this;
+      }
+    }
+
+    config.style=cytoscape.stylesheet()
+      .selector('node')
+      .css({
+        'background-color':'data(color)',
+        'shape':'data(favshape)',
+        'text-valign': 'center',
+        'content':'data(name)',
+      })
+
+    data.nodes.forEach(function(item,index){
+      var appendItem={
+        id:item.id,
+        type: item.type,
+        properties:item.properties
+      };
+
+      //Defining the name and display properties
+      if(item.properties.name){
+        item.name=item.properties.name;
+      }
+
+      switch(item.type){
+        case 'DATA_ASSET':
+          appendItem.color="#8355a3";
+          appendItem.favshape="rectangle";
+          item.name=item.properties.asset_name;
+          break;
+        case 'DATA_CONSUMER':
+          appendItem.color="#BE9791";
+          appendItem.favshape="rectangle";
+          break;
+        case 'PROSESED':
+          appendItem.favshape="hexagon";
+          item.name=item.properties.type;
+          if(item.properties.type.toLower==='transmission'){
+            appendItem.color="#0a581b";
+          } else {
+            appendItem.color="#50BB7C";
+          }
+          break;
+        case 'SERVER_OR_SERVICE':
+          appendItem.favshape="barrel";
+          appendItem.color="#990000";
+          break;
+        default:
+          appendItem.favshape="ellipse";
+          appendItem.color="#F1F1F1"
+      }
+      config.elements.nodes.push({data:appendItem});
+    })
+
+    data.edges.forEach(function(item,index){
+      var dataItem=item;
+      dataItem.id=index;
+      config.elements.edges.push({data:dataItem});
+    });
+
+    cytoscape(config);
   }
 </script>
 {% endblock %}

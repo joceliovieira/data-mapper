@@ -117,7 +117,7 @@ module.exports=function(emmiter,config){
       return session.run('MATCH (p1)-[n]->(p2) return n').then((relationship_data)=>{
         return_data.edges=_.map(relationship_data.records, (obj) => {
           const value ={
-            caption:obj._fields[0].type,
+            type:obj._fields[0].type,
             source: obj._fields[0].start.low,
             target: obj._fields[0].end.low,
             properties:obj._fields[0].properties
