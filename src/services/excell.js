@@ -3,8 +3,8 @@ if(typeof require !== 'undefined') XLSX = require('xlsx');
 const fileType = require('file-type');
 const _=require('underscore');
 
-// const os = require('os');
-// const moment=require('moment');
+const os = require('os');
+const moment=require('moment');
 
 const config=require('../config');
 
@@ -51,13 +51,15 @@ module.exports=function(config) {
         const first_sheet_name = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[first_sheet_name];
 
+        const version=generateUid();
+
         return entryLengthValidations(worksheet,(error,rowCount) => {
           if(error) {
             return responseCallback(error)
           }
           getColumnDisplayNamesFormFirstLine(worksheet,(firstRowData)=>{
-            iterateWorksheet(worksheet,rowCount,2,(rowData,nextCallback)=>{
-              onReadCallback(rowData,firstRowData,nextCallback);
+            iterateWorksheet(worksheet,rowCount,2,(rowData,maxRows,row,nextCallback)=>{
+              onReadCallback(rowData,firstRowData,maxRows,row,version,nextCallback);
             });//Start readinng on second row
           })
           return responseCallback(null,rowCount);
@@ -121,7 +123,7 @@ module.exports=function(config) {
         }
       });
 
-      return callback(rowData,(error)=>{
+      return callback(rowData,maxRows,row,(error)=>{
         if(!error){
           return iterateWorksheet(worksheet,maxRows,row+1,callback);
         }
@@ -130,8 +132,9 @@ module.exports=function(config) {
   }
 
   /**
-  * Reads the firstLine of the worksheer and returns its values
-  * @param
+  * Reads the first Line of the worksheer and returns its values
+  * @param {Object} worksheet The worksheet that is used to get the information from the first line.
+  * @param {Function} callback The callback that returns the result or the error.
   */
   const getColumnDisplayNamesFormFirstLine=function(worksheet,callback){
 
@@ -151,8 +154,18 @@ module.exports=function(config) {
     return callback(rowData);
   }
 
+  /**
+  * Create an Object with system-generated unique Identifiers
+  * @return {Object}
+  */
   const generateUid=function(){
-
+    const time = moment().utc();
+    const unix = time.valueOf();
+    return {
+      'date_unix':unix, //Keeping duplicate info for quicker search
+      'date': time.format('D/M/YYYY'),//Keeping duplicate info for quicker search
+      'version_name':os.hostname()+'_'+unix
+    }
   }
 
 };

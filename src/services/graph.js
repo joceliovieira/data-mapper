@@ -1,5 +1,4 @@
 const neo4j = require('neo4j-driver').v1;
-const moment = require('moment');
 const _ = require('underscore');
 
 module.exports=function(emmiter,config){
@@ -20,15 +19,16 @@ module.exports=function(emmiter,config){
     emmiter.emmit('neo4j_connection_error',error.message);
   }
 
-  const generateUniqueLabel=function(prefix){
-    return prefix+moment.utc().format(x);
-  }
 
   /**
   * Insert a row of the excell-like data.
   * @param {Object} row The row that contains the data
+  * @param {Object} labels What it will get displayed for each row and each node
+  * @param {Integer} maxRows How many rows the uploaded excell contains
+  * @param {Integer} rowNum The number/order/increasing number of the currently read row
+  * @param {Object} version The version information
   */
-  self.insertFromExcellRow=function(row,labels,callback){
+  self.insertFromExcellRow=function(row,labels,maxRows,rowNum,version,callback){
 
       const session = _neo4j.session()
       const transaction= session.beginTransaction();
@@ -104,18 +104,35 @@ module.exports=function(emmiter,config){
         'securityControl':labels.securityControl.trim()
       })
 
+      //Merging version information with replacement strings
+      Object.assign(values,version);
+
+      values.rowData=JSON.stringify(row);
+      values.rowNum=neo4j.int(rowNum);
+      values.totalRows=neo4j.int(maxRows);
+
+      console.log(values)
+
       //The query itself that will be executed over the Neo4j Server
-      let query=`MERGE (DATA_ASSET:DATA_ASSET { id:{dataid} , asset_name:{dataAsset}, subject:{dataSubject}, classification:{securityClassification},  categoryInfo:{categoryInfo}, labels:{dataAssetLabels} })
-      MERGE (SERVER_OR_SERVICE:SERVER_OR_SERVICE { name: {serverOrService}, labels:{serverOrServiceLabels} })
-      MERGE (APPLICATION:APPLICATION { name:{appName}, labels: {applicationLabels} })
-      MERGE (DATA_CONSUMER:DATA_CONSUMER { usedBy: {usedBy}, accessOrgPositions: {whoCanAccess}, labels: {dataConsumerLabels} })
-      MERGE (PROSESED:PROSESED { type:{processingType}, source:{source},pIIclasification:{pIIclasification}, labels: {prosessedLabels} })
+      let query=` MERGE (UPLOAD_PROCESS:UPLOAD_PROCESS {version_name:{version_name}, date_unix:{date_unix}, date:{date}, totalRows: {totalRows} })
+      MERGE (ROW:ROW { upload_version_name:{version_name}, row_num: {rowNum}, rowData:{rowData} })
+      MERGE (DATA_ASSET:DATA_ASSET { version_name:{version_name}, id:{dataid} , asset_name:{dataAsset}, subject:{dataSubject}, classification:{securityClassification},  categoryInfo:{categoryInfo}, labels:{dataAssetLabels} })
+      MERGE (SERVER_OR_SERVICE:SERVER_OR_SERVICE { version_name:{version_name}, name: {serverOrService}, labels:{serverOrServiceLabels} })
+      MERGE (APPLICATION:APPLICATION { version_name:{version_name}, name:{appName}, labels: {applicationLabels} })
+      MERGE (DATA_CONSUMER:DATA_CONSUMER { version_name:{version_name}, usedBy: {usedBy}, accessOrgPositions: {whoCanAccess}, labels: {dataConsumerLabels} })
+      MERGE (PROSESED:PROSESED { version_name:{version_name}, type:{processingType}, source:{source},pIIclasification:{pIIclasification}, labels: {prosessedLabels} })
       MERGE (DATA_CONSUMER)-[:ACCESSING]->(DATA_ASSET)
       MERGE (SERVER_OR_SERVICE)<-[:FROM]-(DATA_CONSUMER)
-      MERGE (DATA_ASSET)-[:COLLECTED_BY { method: {collectionMethod}, purpoce:{purpoce}, labels: {collectedByLabels} }]->(APPLICATION)
+      MERGE (DATA_ASSET)-[:COLLECTED_BY { version_name:{version_name}, method: {collectionMethod}, purpoce:{purpoce}, labels: {collectedByLabels} }]->(APPLICATION)
       MERGE (DATA_ASSET)-[:GETS]->(PROSESED)
       MERGE (PROSESED)-[:FROM]->(APPLICATION)
-      MERGE (PROSESED)-[:INTO { data_id:{dataid}, transferMechanism:{dataTransferMechanism}, securityControl:{securityControl}, labels:{intoLabels} }]->(SERVER_OR_SERVICE)`;
+      MERGE (PROSESED)-[:INTO { version_name:{version_name}, data_id:{dataid}, transferMechanism:{dataTransferMechanism}, securityControl:{securityControl}, labels:{intoLabels} }]->(SERVER_OR_SERVICE)
+      MERGE (DATA_ASSET)<-[:HAS]-(UPLOAD_PROCESS)
+      MERGE (SERVER_OR_SERVICE)<-[:HAS]-(UPLOAD_PROCESS)
+      MERGE (APPLICATION)<-[:HAS]-(UPLOAD_PROCESS)
+      MERGE (DATA_CONSUMER)<-[:HAS]-(UPLOAD_PROCESS)
+      MERGE (PROSESED)<-[:HAS]-(UPLOAD_PROCESS)
+      MERGE (UPLOAD_PROCESS)-[:HAS]->(ROW)`;
 
 
       transaction.run(query,values).then((data)=>{
