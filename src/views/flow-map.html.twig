@@ -17,7 +17,7 @@
             </select>
         </div>
         <div class="class=col-xs-12">
-          <div id="graph_display" style="width: 500px;height: 500px; display: block;"></div>
+          <div id="graph_display" style="width: 100%;height: 500px; display: block;"></div>
         </div>
       </div>
     </div>
@@ -88,7 +88,19 @@
         'shape':'data(favshape)',
         'text-valign': 'center',
         'content':'data(name)',
-      })
+        'text-valign': 'center',
+        'text-outline-width': 2,
+        'color':'#181A1F',
+        'text-outline-color': '#181A1F',
+      }).selector('edge')
+      .css({
+        'target-arrow-shape': 'triangle',
+        'source-arrow-shape': 'circle',
+        'line-color': '#000000',
+        'source-arrow-color': '#000000',
+        'target-arrow-color': '#000000',
+        'content':'data(type)'
+      });
 
     data.nodes.forEach(function(item,index){
       var appendItem={
