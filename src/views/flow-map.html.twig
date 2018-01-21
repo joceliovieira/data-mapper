@@ -52,7 +52,7 @@
 <script>
   $(document).ready(function(){
     $("#version_select").select2();
-      loadGraphData(renderGraph);
+    loadGraphData(renderGraph);
   });
 
   /**
@@ -89,8 +89,8 @@
       .selector('node')
       .css({
         'background-color':'data(color)',
-        'width': '200px',
         'shape':'data(favshape)',
+        'width':'150px',
         'text-valign': 'center',
         'content':'data(name)',
         'text-valign': 'center',
@@ -100,7 +100,6 @@
       .css({
         'line-color': '#000000',
         'content':'data(type)',
-        'width': '12px',
         'color': '#F00FF0'
       });
 
@@ -154,7 +153,7 @@
 
     var cy=cytoscape(config);
 
-    cy.on('tap','node',function(event){
+    cy.on('tap',function(event){
       var evtTarget = event.target;
 
       if( evtTarget === cy ){
@@ -165,18 +164,20 @@
         console.log("Display Info")
         displayInfo(evtTarget._private.data.properties);
       }
-    }).on('tap','edge',function(event){
+    }).on('mouseover',function(event){
       var evtTarget = event.target;
 
-      if( evtTarget === cy ){
-        console.log('tap on background');
-        $("#nodes").hide();
-        $("#no_selected").show();
-      } else {
-        console.log("Display Info")
-        displayInfo(evtTarget._private.data.properties);
+      if( evtTarget !== cy ){
+        console.log("Mouse Over");
+        evtTarget.style('border-width','2px').style('border-color',"#AF0000");
       }
-    })
+    }).on('mouseout',function(event){
+      var evtTarget = event.target;
+      if( evtTarget !== cy ){
+        console.log("Fired");
+        evtTarget.style('border-width',null).style('border-color',null);
+      }
+    });
   }
 
   var displayInfo=function(info){
