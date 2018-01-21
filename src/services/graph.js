@@ -140,7 +140,7 @@ module.exports=function(emmiter,config){
     };
 
 
-    session.run("MATCH (p) RETURN p").then( (data) =>{
+    session.run("MATCH (p) WHERE labels(p)[0] IN ['DATA_ASSET','SERVER_OR_SERVICE','APPLICATION','DATA_CONSUMER','PROSESED'] RETURN p").then( (data) =>{
       //get the session data
       return_data.nodes=_.map(data.records,(obj)=>{
         const value={
@@ -152,7 +152,7 @@ module.exports=function(emmiter,config){
         return value;
       });
 
-      return session.run('MATCH (p1)-[n]->(p2) return n').then((relationship_data)=>{
+      return session.run('MATCH ()-[n:ACCESSING|FROM|COLLECTED_BY|GETS|INTO]->() return n').then((relationship_data)=>{
         return_data.edges=_.map(relationship_data.records, (obj) => {
           const value ={
             id:obj._fields[0].identity.low,
