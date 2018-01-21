@@ -164,18 +164,29 @@
         console.log("Display Info")
         displayInfo(evtTarget._private.data.properties);
       }
-    }).on('mouseover',function(event){
+    }).on('mouseover','node',function(event){
       var evtTarget = event.target;
-
       if( evtTarget !== cy ){
         console.log("Mouse Over");
         evtTarget.style('border-width','2px').style('border-color',"#AF0000");
       }
-    }).on('mouseout',function(event){
+    }).on('mouseout','node',function(event){
       var evtTarget = event.target;
       if( evtTarget !== cy ){
         console.log("Fired");
-        evtTarget.style('border-width',null).style('border-color',null);
+        evtTarget.style('border-width','0px').style('border-color',null);
+      }
+    }).on('mouseover','edge',function(event){
+      var evtTarget = event.target;
+      if( evtTarget !== cy ){
+        console.log("Mouse Over");
+        evtTarget.style('line-color','#AF0000');
+      }
+    }).on('mouseout','edge',function(event){
+      var evtTarget = event.target;
+      if( evtTarget !== cy ){
+        console.log("Fired");
+        evtTarget.style('line-color','#000000');
       }
     });
   }
