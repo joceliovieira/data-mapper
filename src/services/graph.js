@@ -147,7 +147,11 @@ module.exports=function(emmiter,config){
   * Get the graph in a formm that is renderable with Alchemy.js
   * @param {Function} callback The callback that returns the data or an error
   */
-  self.fetchDataAsGraph=function(callback){
+  self.fetchDataAsGraph=function(version,callback){
+
+    if(!version){
+      return callback(new Error('Please select a version'));
+    }
 
     const session = _neo4j.session();
 
@@ -156,20 +160,19 @@ module.exports=function(emmiter,config){
       edges:[]
     };
 
+    const params={
+      'version':version
+    }
 
-    session.run("MATCH (p) WHERE labels(p)[0] IN ['DATA_ASSET','SERVER_OR_SERVICE','APPLICATION','DATA_CONSUMER','PROSESED'] RETURN p").then( (data) =>{
-      //get the session data
-      return_data.nodes=_.map(data.records,(obj)=>{
-        const value={
-          id:obj._fields[0].identity.low,
-          properties:obj._fields[0].properties,
-          type: obj._fields[0].labels[0],
-        };
-
-        return value;
-      });
-
-      return session.run('MATCH ()-[n:ACCESSING|FROM|COLLECTED_BY|GETS|INTO]->() return n').then((relationship_data)=>{
+    /**
+    * Fetch All links from a graph
+    */
+    const fetchAllLinks= () => {
+      const query=`MATCH (UPLOAD_PROCESS:UPLOAD_PROCESS {version_name:{version}})-[:HAS]->(p1)-[n:ACCESSING|FROM|COLLECTED_BY|GETS|INTO]->(p2)<-[:HAS]-(UPLOAD_PROCESS)
+      WHERE labels(p1)[0] IN ['DATA_ASSET','SERVER_OR_SERVICE','APPLICATION','DATA_CONSUMER','PROSESED'] AND
+      labels(p2)[0] IN ['DATA_ASSET','SERVER_OR_SERVICE','APPLICATION','DATA_CONSUMER','PROSESED']
+      return n`
+      return session.run(query,params).then((relationship_data)=>{
         return_data.edges=_.map(relationship_data.records, (obj) => {
           const value ={
             id:obj._fields[0].identity.low,
@@ -185,10 +188,57 @@ module.exports=function(emmiter,config){
       }).catch((error)=>{
         callback(error);
       });
+    }
+
+    const query=`MATCH (UPLOAD_PROCESS:UPLOAD_PROCESS {version_name:{version}})-[:HAS]->(p)
+     WHERE labels(p)[0] IN ['DATA_ASSET','SERVER_OR_SERVICE','APPLICATION','DATA_CONSUMER','PROSESED']
+     RETURN p`;
+    session.run(query,params).then( (data) =>{
+      //get the session data
+      return_data.nodes=_.map(data.records,(obj)=>{
+        const value={
+          id:obj._fields[0].identity.low,
+          properties:obj._fields[0].properties,
+          type: obj._fields[0].labels[0],
+        };
+
+        return value;
+      });
+
+      return fetchAllLinks();
     }).catch((error)=>{
       callback(error);
     })
+  }
 
+  /**
+  * Listing all versions
+  * @param {String} name The name of the version
+  * @param {Function} callback In order to return any errors or results
+  */
+  self.getVersionList=function(version,callback){
+    const session = _neo4j.session();
+
+    let query=null;
+    if(version){
+      query=`MATCH (UPLOAD_PROCESS:UPLOAD_PROCESS {version_name:{version}}) return UPLOAD_PROCESS`
+    } else {
+      query=`MATCH (UPLOAD_PROCESS:UPLOAD_PROCESS) return UPLOAD_PROCESS`
+    }
+
+    session.run(query,{'version':version}).then((data)=>{
+      const return_data=_.map(data.records,(obj)=>{
+        const properties=obj._fields[0].properties;
+        return {
+          'name':properties.version_name,
+          'date_unix':properties.date_unix
+        };
+      });
+      callback(null,return_data);
+    }).catch((error)=>{
+      console.error(error);
+      callback(error);
+    })
   }
 
 }

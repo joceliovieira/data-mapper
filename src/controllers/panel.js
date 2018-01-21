@@ -50,13 +50,24 @@ function PanelController(expressApp, emmiter, excellReader, graphMaker){
   });
 
   router.get('/flow-map/graph',function(req,res,next){
-    graphMaker.fetchDataAsGraph((error,data)=>{
+    graphMaker.fetchDataAsGraph('6a8d8c47012a_1516564452895',(error,data)=>{
       if(error){
-        return res.status(500).json({'message':'An error occured','info':error.message})
+        console.log(error);
+        return res.status(500).json({'message':'An error occured'})
       }
       res.json(data);
     })
   });
+
+  router.get('/versions',function(req,res,next){
+    const version=req.query.version;
+    graphMaker.getVersionList(version,(error,data)=>{
+      if(error){
+        return res.status(500).json({'message':'Could not fetch the versions'})
+      }
+      res.json(data);
+    });
+  })
 
   expressApp.use('/',router);
 };
