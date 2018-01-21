@@ -7,10 +7,10 @@
 
 {% block content %}
 <div class="row">
-  <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10">
+  <div class="col-xs-12 col-sm-9 col-md-9 col-lg-10">
     <div class="box">
       <div class="box-body">
-        <div class="class=col-xs-12" >
+        <div class="col-xs-12" >
             <select id="version_select" class="select2" name="version">
                   <option selected="selected" value="AL">Capone</option>
                   <option value="Chuck">Norris</option>
@@ -22,7 +22,7 @@
       </div>
     </div>
   </div>
-  <div class="col-cs-12 col-sm-3 col-md-2 col-lg-2">
+  <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
     <div id="#nodeInfo" class="box box-success box-solid">
       <div class="box-header">
         <h4 data-node="false">Information</h4>
@@ -35,7 +35,10 @@
             <p><i class="fa fa-hand-o-left faa-horizontal animated fa-3x"></i></p>
             <p><span class="text-lead">Select a node or a link in order to display information about it.</span></p>
         </div>
-        <div id="nodes" class="row"></div>
+        <div class="row">
+          <div id="nodes" style="width:100%;margin:1px;padding:3px;">
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -154,11 +157,37 @@
 
       if( evtTarget === cy ){
         console.log('tap on background');
+        $("#nodes").hide();
+        $("#no_selected").show();
       } else {
-        console.log('tap on some element');
-        console.log(evtTarget._private.data.properties);
+        console.log("Display Info")
+        displayInfo(evtTarget._private.data.properties);
       }
     })
+  }
+
+  var displayInfo=function(info){
+
+    $("#nodes").children().remove();
+    $("#nodes").hide();
+    $("#no_selected").show();
+
+    if(info && info.labels) {
+      var labels=JSON.parse(info.labels);
+      var elem=$(document.createElement('dl'));
+
+      Object.keys(labels).forEach(function(item,index){
+        console.log(labels[item],info[item]);
+        var labelElem=$(document.createElement('dt')).text(labels[item]);
+        var valueElem=$(document.createElement('dd')).text(info[item]);
+        elem.append(labelElem).append(valueElem);
+      });
+
+      $('#nodes').append(elem);
+      $('#nodes').show();
+      $('#no_selected').hide();
+    }
+
   }
 </script>
 {% endblock %}
