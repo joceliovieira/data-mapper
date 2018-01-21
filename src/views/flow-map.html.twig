@@ -7,25 +7,25 @@
 
 {% block content %}
 <div class="row">
-  <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9">
+  <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10">
     <div class="box">
       <div class="box-body">
-        <div class="class=col-xs-12">
+        <div class="class=col-xs-12" >
             <select id="version_select" class="select2" name="version">
                   <option selected="selected" value="AL">Capone</option>
                   <option value="Chuck">Norris</option>
             </select>
         </div>
-        <div class="class=col-xs-12">
-          <div id="graph_display" style="width: 100%;height: 500px; display: block;"></div>
+        <div class="class=col-xs-12" >
+          <div id="graph_display" style="width: 100%;height: 800px; display: block;"></div>
         </div>
       </div>
     </div>
   </div>
-  <div class="col-cs-12 col-sm-3 col-md-3 col-lg-3">
+  <div class="col-cs-12 col-sm-3 col-md-2 col-lg-2">
     <div id="#nodeInfo" class="box box-success box-solid">
       <div class="box-header">
-        <h3 data-node="false">Information</h3>
+        <h4 data-node="false">Information</h4>
         <div class="box-tools pull-right">
           <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
         </div>
@@ -85,11 +85,11 @@
       .selector('node')
       .css({
         'background-color':'data(color)',
+        'width': '200px',
         'shape':'data(favshape)',
         'text-valign': 'center',
         'content':'data(name)',
         'text-valign': 'center',
-        'text-outline-width': 2,
         'color':'#181A1F',
         'text-outline-color': '#181A1F',
       }).selector('edge')
@@ -111,22 +111,22 @@
 
       //Defining the name and display properties
       if(item.properties.name){
-        item.name=item.properties.name;
+        appendItem.name=item.properties.name;
       }
-
       switch(item.type){
         case 'DATA_ASSET':
           appendItem.color="#8355a3";
           appendItem.favshape="rectangle";
-          item.name=item.properties.asset_name;
+          appendItem.name=item.properties.asset_name;
           break;
         case 'DATA_CONSUMER':
+          appendItem.name=item.properties.usedBy;
           appendItem.color="#BE9791";
           appendItem.favshape="rectangle";
           break;
         case 'PROSESED':
           appendItem.favshape="hexagon";
-          item.name=item.properties.type;
+          appendItem.name=item.properties.type;
           if(item.properties.type.toLower==='transmission'){
             appendItem.color="#0a581b";
           } else {
