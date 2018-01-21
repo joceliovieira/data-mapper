@@ -74,7 +74,7 @@
         edges:[]
       },
       layout: {
-        name: 'random',
+        name: 'breadthfirst',
         padding: 100
       },
       ready: function(){
@@ -143,12 +143,22 @@
 
     data.edges.forEach(function(item,index){
       var dataItem=item;
-      dataItem.id=100*item.id;
-      console.log(item);
+      dataItem.id=100*item.id;//Ensuring that the esges will have a unique id
       config.elements.edges.push({data:dataItem});
     });
 
-    cytoscape(config);
+    var cy=cytoscape(config);
+
+    cy.on('tap','node',function(event){
+      var evtTarget = event.target;
+
+      if( evtTarget === cy ){
+        console.log('tap on background');
+      } else {
+        console.log('tap on some element');
+        console.log(evtTarget._private.data.properties);
+      }
+    })
   }
 </script>
 {% endblock %}
