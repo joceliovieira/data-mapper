@@ -2,6 +2,10 @@
 if(typeof require !== 'undefined') XLSX = require('xlsx');
 const fileType = require('file-type');
 const _=require('underscore');
+
+// const os = require('os');
+// const moment=require('moment');
+
 const config=require('../config');
 
 
@@ -145,6 +149,10 @@ module.exports=function(config) {
     });
 
     return callback(rowData);
+  }
+
+  const generateUid=function(){
+
   }
 
 };
