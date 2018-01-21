@@ -28,7 +28,7 @@ module.exports=function(emmiter,config){
   * Insert a row of the excell-like data.
   * @param {Object} row The row that contains the data
   */
-  self.insertFromExcellRow=function(row,callback){
+  self.insertFromExcellRow=function(row,labels,callback){
 
       const session = _neo4j.session()
       const transaction= session.beginTransaction();
@@ -62,26 +62,64 @@ module.exports=function(emmiter,config){
         'collectionMethod':row.collectionMethod.trim(),
       }
 
+      /**
+      *  Keeping the labels in jsonencoded strings
+      *  I do that because I want to pass the information over the frontend
+      *  for each node seperately in order to have a self-contained info display mechanism
+      */
+      values.dataAssetLabels=JSON.stringify({
+        'id':labels.dataId.trim(),
+        'asset_name':labels.dataAsset.trim(),
+        'subject':labels.dataSubject.trim(),
+        'classification':labels.securityClassification.trim(),
+        'categoryInfo':labels.categoryInfo.trim()
+      });
+
+      values.serverOrServiceLabels=JSON.stringify({
+        'name': labels.storageOrData.trim()
+      });
+
+      values.applicationLabels=JSON.stringify({
+        'name':labels.collectedBy.trim()
+      });
+
+      values.dataConsumerLabels=JSON.stringify({
+        'usedBy':labels.usedBy.trim(),
+        'accessOrgPositions':labels.access.trim()
+      });
+
+      values.prosessedLabels=JSON.stringify({
+        'type':labels.processingType.trim(),
+        'source':labels.source.trim(),
+      });
 
 
-      let query=`MERGE (DATA_ASSET:DATA_ASSET { id:{dataid} ,asset_name:{dataAsset}, subject:{dataSubject}, classification:{securityClassification}, categoryInfo:{categoryInfo}})
-      MERGE (SERVER_OR_SERVICE:SERVER_OR_SERVICE { name: {serverOrService} })
-      MERGE (APPLICATION:APPLICATION { name:{appName} })
-      MERGE (DATA_CONSUMER:DATA_CONSUMER { usedBy: {usedBy}, accessOrgPositions: {whoCanAccess}})
-      MERGE (PROSESED:PROSESED { type:{processingType}, source:{source},pIIclasification:{pIIclasification} })
+      values.collectedByLabels=JSON.stringify({
+        'method':labels.collectionMethod.trim(),
+        'purpoce':labels.purpoce.trim()
+      });
+
+      values.intoLabels=JSON.stringify({
+        'transferMechanism':labels.dataTranserMechanism.trim(),
+        'securityControl':labels.securityControl.trim()
+      })
+
+      //The query itself that will be executed over the Neo4j Server
+      let query=`MERGE (DATA_ASSET:DATA_ASSET { id:{dataid} , asset_name:{dataAsset}, subject:{dataSubject}, classification:{securityClassification},  categoryInfo:{categoryInfo}, labels:{dataAssetLabels} })
+      MERGE (SERVER_OR_SERVICE:SERVER_OR_SERVICE { name: {serverOrService}, labels:{serverOrServiceLabels} })
+      MERGE (APPLICATION:APPLICATION { name:{appName}, labels: {applicationLabels} })
+      MERGE (DATA_CONSUMER:DATA_CONSUMER { usedBy: {usedBy}, accessOrgPositions: {whoCanAccess}, labels: {dataConsumerLabels} })
+      MERGE (PROSESED:PROSESED { type:{processingType}, source:{source},pIIclasification:{pIIclasification}, labels: {prosessedLabels} })
       MERGE (DATA_CONSUMER)-[:ACCESSING]->(DATA_ASSET)
       MERGE (SERVER_OR_SERVICE)<-[:FROM]-(DATA_CONSUMER)
-      MERGE (DATA_ASSET)-[:COLLECTED_BY { method: {collectionMethod}, purpoce:{purpoce} }]->(APPLICATION)
+      MERGE (DATA_ASSET)-[:COLLECTED_BY { method: {collectionMethod}, purpoce:{purpoce}, labels: {collectedByLabels} }]->(APPLICATION)
       MERGE (DATA_ASSET)-[:GETS]->(PROSESED)
       MERGE (PROSESED)-[:FROM]->(APPLICATION)
-      MERGE (PROSESED)-[:INTO { data_id:{dataid}, transferMechanism:{dataTransferMechanism}, securityControl:{securityControl}}]->(SERVER_OR_SERVICE)`;
+      MERGE (PROSESED)-[:INTO { data_id:{dataid}, transferMechanism:{dataTransferMechanism}, securityControl:{securityControl}, labels:{intoLabels} }]->(SERVER_OR_SERVICE)`;
 
-      let times_called=0;
 
       transaction.run(query,values).then((data)=>{
           transaction.commit().then((data)=>{
-              times_called++;
-              console.log('Success'+times_called);
               session.close();
               callback(null);
           }).catch(errorHandler);
@@ -116,7 +154,6 @@ module.exports=function(emmiter,config){
 
       return session.run('MATCH (p1)-[n]->(p2) return n').then((relationship_data)=>{
         return_data.edges=_.map(relationship_data.records, (obj) => {
-          console.log(obj._fields[0].identity.low)
           const value ={
             id:obj._fields[0].identity.low,
             type:obj._fields[0].type,

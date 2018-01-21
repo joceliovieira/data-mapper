@@ -26,7 +26,6 @@ module.exports=function(config) {
   self.readAllLinesFromXLSXBufferAndProcessWithACallback = function(data,responseCallback,onReadCallback) {
 
       const type=fileType(data);
-      console.log(type);
       // .xlsx files are zipped xml formats
       if(type && (type.mime === 'application/x-msi' || type.mime === 'application/zip')){
 
@@ -52,7 +51,11 @@ module.exports=function(config) {
           if(error) {
             return responseCallback(error)
           }
-          iterateWorksheet(worksheet,rowCount,2,onReadCallback);//Start readinng on second row
+          getColumnDisplayNamesFormFirstLine(worksheet,(firstRowData)=>{
+            iterateWorksheet(worksheet,rowCount,2,(rowData,nextCallback)=>{
+              onReadCallback(rowData,firstRowData,nextCallback);
+            });//Start readinng on second row
+          })
           return responseCallback(null,rowCount);
         });
 
@@ -75,7 +78,6 @@ module.exports=function(config) {
     }
 
     const rowCount = parseInt(columnInfo[columnInfo.length-1].substr(1));
-    console.log(rowCount);
     if(rowCount <= 1){
       return callback(new Error('The excell file does not contain any entries at all!'));
     }
@@ -122,4 +124,27 @@ module.exports=function(config) {
       });
     });
   }
+
+  /**
+  * Reads the firstLine of the worksheer and returns its values
+  * @param
+  */
+  const getColumnDisplayNamesFormFirstLine=function(worksheet,callback){
+
+    let rowData={};
+
+    const alphas=_.range('A'.charCodeAt(0),config.excell.maxColumn.charCodeAt(0));
+
+    _.each(alphas,(column) => {
+      column=String.fromCharCode(column);
+      const item=column+1;
+      const key=config.excell.columnMap[column];
+      if(worksheet[item] && key ){
+        rowData[key]=worksheet[item].v;
+      }
+    });
+
+    return callback(rowData);
+  }
+
 };
