@@ -74,7 +74,8 @@
         edges:[]
       },
       layout: {
-        name: 'cose',
+        name: 'random',
+        padding: 100
       },
       ready: function(){
         window.cy = this;
@@ -94,11 +95,7 @@
         'text-outline-color': '#181A1F',
       }).selector('edge')
       .css({
-        'target-arrow-shape': 'triangle',
-        'source-arrow-shape': 'circle',
         'line-color': '#000000',
-        'source-arrow-color': '#000000',
-        'target-arrow-color': '#000000',
         'content':'data(type)'
       });
 
@@ -146,7 +143,8 @@
 
     data.edges.forEach(function(item,index){
       var dataItem=item;
-      dataItem.id=index;
+      dataItem.id=100*item.id;
+      console.log(item);
       config.elements.edges.push({data:dataItem});
     });
 
