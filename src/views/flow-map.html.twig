@@ -1,8 +1,8 @@
 {% extends "layout.html.twig" %}
 
 {% block css %}
-<link rel="stylesheet" href="/css/select2.min.css" />
 <link rel="stylesheet" href="/css/font-awesome-animation.min.css" />
+<link rel="stylesheet" href="/css/bootstrap-datepicker.min.css">
 {% endblock %}
 
 {% block content %}
@@ -40,12 +40,14 @@
 
 {% block javascripts %}
 
-<script src="/js/select2.min.js"></script>
 <script src="/js/cytoscape.js"></script>
 <script>
 
   $(document).ready(function(){
-    //selectVersion in into the layout.html.twig template
+    versionSearchByDate();
+    onSelectVersionHandler(function(version){
+      loadGraphData(version,renderGraph)
+    });
     // selectVersion($('#version_select'),function(version) {
     //   loadGraphData(version,renderGraph)
     // });

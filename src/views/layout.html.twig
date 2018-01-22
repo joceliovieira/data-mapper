@@ -132,57 +132,67 @@
       $("#notification_message").show();
       setTimeout(function(){
         $("#notification_message").hide();
-      },1500)
+      },2500)
     }
 
-    function selectVersion(element,onSelectCallback){
-
-      if(element.select2 && typeof element.select2 === 'function') {
-
-          //Setting the initial values
-          const initialvalues=$.map(element.children(),function(elem){
-            var returrnVal={
-              id:$(elem).attr('value'),
-              text: moment(parseInt($(elem).text())).format('D/M/YYYY H:mm')
-            }
-            return returrnVal;
-          })
-
-          element.text('');
-
-          var select=element.select2({
-            ajax:{
-              type: 'GET',
-              placeholder:"Select for a specific version",
-              url:'/versions',
-              data:function(query){
-                console.log("Here");
-                return {
-                  version: query.term
-                }
-              },
-              processResults: function(data,params){
-                  params.page = params.page || 1;
-                  console.log(data)
-                  return $.map(data,function(obj){
-                    console.log(obj)
-                    return {
-                      id:obj.name,
-                      text: moment(obj.utcMilis).format('M/D/YYYY H:mm')
-                    }
-                  })
-              },
-              templateSelection:function(state){
-                if(state.id){
-                  onSelectCallback(state.id);
-                }
-              }
+    function versionSearchByDate(){
+      $.getScript('/js/bootstrap-datepicker.min.js',function(data, textStatus, jqxhr ){
+        $('input[data-use="version_selector"]').datepicker({
+          format:{
+            toDisplay:function(date, format, language){
+                return moment(new Date(date)).format('D/M/YYYY');
             },
-            data:initialvalues
-          });
-          select.trigger("change");
-      }
+            toValue:function(date,format,language){
+              return new Date(date);
+            }
+          },
+          title: 'Click To Select a version',
+          todayHighlight: true
+        }).on('changeDate',function(event){
+          var value=moment(new Date(event.date)).format('D/M/YYYY')
+          ajaxGetVersions(value);
+        });
+      }).fail(function(){
+        errorMessageNotification("Failed to load some scripts please refresh your browsers tab");
+      });
     }
+
+    function ajaxGetVersions(searchTerm,onItemClickCallback){
+      $.get('/versions',{'version':searchTerm}).done(function(data){
+        $('ul[data-use="version_display"]').html("");
+        console.log(data.length);
+
+        if(data.length > 0){
+          data.forEach(function(obj){
+            var item=$(document.createElement('li'))
+            item.text(moment(obj.utcMilis).format('ddd D/M/YYY H:m:s'));
+            item.attr('data-version',obj.name);
+            item.on('click',function(event){
+              event.preventDefault();
+              var item=event.target;
+              var value=$(item).attr('data-version');
+              onClickCallback(value);
+            });
+            $('ul[data-use="version_display"]').append(item);
+          });
+        } else {
+          var item=$(document.createElement('li'))
+          item.text("No Data found");
+          $('ul[data-use="version_display"]').append(item);
+        }
+      }).fail(function(xhqr){
+        errorMessageNotification('Could not fetch the versions');
+      })
+    }
+
+    // function onSelectVersionHandler(onClickCallback){
+    //   $('li[data-version]').on('click',function(event){
+    //     event.preventDefault();
+    //     var item=event.target;
+    //     var value=$(item).attr('data-version');
+    //     onClickCallback(value);
+    //   });
+    // }
 
   </script>
   {% block javascripts %}{% endblock %}
