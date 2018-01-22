@@ -135,7 +135,7 @@
       },2500)
     }
 
-    function versionSearchByDate(){
+    function versionSearchByDate(onItemClickCallback){
       $.getScript('/js/bootstrap-datepicker.min.js',function(data, textStatus, jqxhr ){
         $('input[data-use="version_selector"]').datepicker({
           format:{
@@ -150,7 +150,7 @@
           todayHighlight: true
         }).on('changeDate',function(event){
           var value=moment(new Date(event.date)).format('D/M/YYYY')
-          ajaxGetVersions(value);
+          ajaxGetVersions(value,onItemClickCallback);
         });
       }).fail(function(){
         errorMessageNotification("Failed to load some scripts please refresh your browsers tab");
@@ -171,7 +171,7 @@
               event.preventDefault();
               var item=event.target;
               var value=$(item).attr('data-version');
-              onClickCallback(value);
+              onItemClickCallback(value);
             });
             $('ul[data-use="version_display"]').append(item);
           });
@@ -184,16 +184,6 @@
         errorMessageNotification('Could not fetch the versions');
       })
     }
-
-    // function onSelectVersionHandler(onClickCallback){
-    //   $('li[data-version]').on('click',function(event){
-    //     event.preventDefault();
-    //     var item=event.target;
-    //     var value=$(item).attr('data-version');
-    //     onClickCallback(value);
-    //   });
-    // }
-
   </script>
   {% block javascripts %}{% endblock %}
 </body>

@@ -44,8 +44,7 @@
 <script>
 
   $(document).ready(function(){
-    versionSearchByDate();
-    onSelectVersionHandler(function(version){
+    versionSearchByDate(function(version){
       loadGraphData(version,renderGraph)
     });
     // selectVersion($('#version_select'),function(version) {
@@ -63,7 +62,7 @@
       $("#nodes").children().remove();
       callback(data);
     }).fail(function(jxqr){
-      if(xhr.status === 400){
+      if(jxqr.status === 400){
         errorMessageNotification('Please provide a version in order to render the graph.');
       } else {
         errorMessageNotification('Could not fetch the graph data please try again later.');
