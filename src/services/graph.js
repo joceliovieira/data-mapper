@@ -223,7 +223,8 @@ module.exports=function(emmiter,config){
     if(version){
       query=`MATCH (UPLOAD_PROCESS:UPLOAD_PROCESS {version_name:{version}}) return UPLOAD_PROCESS`
     } else {
-      query=`MATCH (UPLOAD_PROCESS:UPLOAD_PROCESS) return UPLOAD_PROCESS`
+      //When no version we want to limit the results into a specific results
+      query=`MATCH (UPLOAD_PROCESS:UPLOAD_PROCESS) return UPLOAD_PROCESS ORDER BY UPLOAD_PROCESS.unix_time DESC LIMIT 10`
     }
 
     session.run(query,{'version':version}).then((data)=>{

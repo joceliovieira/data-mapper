@@ -11,7 +11,10 @@
     <div class="box">
       <div class="box-body">
         <div class="col-xs-12" >
-            <select id="version_select" class="select2" name="version">
+            <select id="version_select" style="width:100%" class="select2" name="version">
+              {% for data in versions %}
+                <option value="{{data.name}}">{{data.date_unix}}</option>
+              {% endfor %}
             </select>
         </div>
         <div class="class=col-xs-12" >
@@ -50,8 +53,6 @@
 <script>
 
   $(document).ready(function(){
-    $("#version_select").select2();
-    // loadGraphData(renderGraph);
     //selectVersion in into the layout.html.twig template
     selectVersion($('#version_select'),function(version) {
       loadGraphData(version,renderGraph)

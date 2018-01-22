@@ -136,18 +136,36 @@
     }
 
     function selectVersion(element,onSelectCallback){
+
       if(element.select2 && typeof element.select2 === 'function') {
-          element.select2({
+
+          //Setting the initial values
+          const initialvalues=$.map(element.children(),function(elem){
+            var returrnVal={
+              id:$(elem).attr('value'),
+              text: moment.unix($(elem).text()).format('M/D/YYYY H:mm')
+            }
+            return returrnVal;
+          })
+
+          element.text('');
+
+          var select=element.select2({
             ajax:{
+              type: 'GET',
+              placeholder:"Select for a specific version",
               url:'/versions',
               data:function(query){
+                console.log("Here");
                 return {
-                  version: params.term
+                  version: query.term
                 }
               },
               processResults: function(data,params){
                   params.page = params.page || 1;
+                  console.log(data)
                   return $.map(data,function(obj){
+                    console.log(obj)
                     return {
                       id:obj.name,
                       text: moment(obj.date_unix).format('M/D/YYYY H:mm')
@@ -159,8 +177,10 @@
                   onSelectCallback(state.id);
                 }
               }
-            }
+            },
+            data:initialvalues
           });
+          select.trigger("change");
       }
     }
 

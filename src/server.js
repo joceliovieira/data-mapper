@@ -58,7 +58,6 @@ app.set('twig options', {
 });
 
 
-
 const staticFiles=require('./controllers/static_files');
 app.use('/',staticFiles);
 
@@ -75,6 +74,8 @@ app.get('/',function(req,res,next){
   //     res.redirect('/login');
   // }
 });
+
+
 
 app.listen(config.http.port,function(){
   console.log("Listening over port: "+config.http.port);
