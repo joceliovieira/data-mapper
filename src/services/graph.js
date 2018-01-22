@@ -114,7 +114,7 @@ module.exports=function(emmiter,config){
       console.log(values)
 
       //The query itself that will be executed over the Neo4j Server
-      let query=` MERGE (UPLOAD_PROCESS:UPLOAD_PROCESS {version_name:{version_name}, date_unix:{date_unix}, date:{date}, totalRows: {totalRows} })
+      let query=`MERGE (UPLOAD_PROCESS:UPLOAD_PROCESS {version_name:{version_name}, utcMilis:{date_unix}, date:{date}, totalRows: {totalRows} })
       MERGE (ROW:ROW { upload_version_name:{version_name}, row_num: {rowNum}, rowData:{rowData} })
       MERGE (DATA_ASSET:DATA_ASSET { version_name:{version_name}, id:{dataid} , asset_name:{dataAsset}, subject:{dataSubject}, classification:{securityClassification},  categoryInfo:{categoryInfo}, labels:{dataAssetLabels} })
       MERGE (SERVER_OR_SERVICE:SERVER_OR_SERVICE { version_name:{version_name}, name: {serverOrService}, labels:{serverOrServiceLabels} })
@@ -216,23 +216,24 @@ module.exports=function(emmiter,config){
   * @param {String} name The name of the version
   * @param {Function} callback In order to return any errors or results
   */
-  self.getVersionList=function(version,callback){
+  self.getVersionList=function(date,callback){
     const session = _neo4j.session();
 
     let query=null;
-    if(version){
-      query=`MATCH (UPLOAD_PROCESS:UPLOAD_PROCESS {version_name:{version}}) return UPLOAD_PROCESS`
+
+    if(date){
+      query=`MATCH (UPLOAD_PROCESS:UPLOAD_PROCESS {date:{date}}) RETURN UPLOAD_PROCESS ORDER BY UPLOAD_PROCESS.utcMilis`
     } else {
       //When no version we want to limit the results into a specific results
-      query=`MATCH (UPLOAD_PROCESS:UPLOAD_PROCESS) return UPLOAD_PROCESS ORDER BY UPLOAD_PROCESS.unix_time DESC LIMIT 10`
+      query=`MATCH (UPLOAD_PROCESS:UPLOAD_PROCESS) RETURN UPLOAD_PROCESS ORDER BY UPLOAD_PROCESS.utcMilis DESC LIMIT 10`
     }
 
-    session.run(query,{'version':version}).then((data)=>{
+    session.run(query,{'date':date}).then((data)=>{
       const return_data=_.map(data.records,(obj)=>{
         const properties=obj._fields[0].properties;
         return {
           'name':properties.version_name,
-          'date_unix':properties.date_unix
+          'utcMilis':properties.utcMilis
         };
       });
       callback(null,return_data);

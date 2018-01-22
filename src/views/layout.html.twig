@@ -143,7 +143,7 @@
           const initialvalues=$.map(element.children(),function(elem){
             var returrnVal={
               id:$(elem).attr('value'),
-              text: moment.unix($(elem).text()).format('M/D/YYYY H:mm')
+              text: moment(parseInt($(elem).text())).format('D/M/YYYY H:mm')
             }
             return returrnVal;
           })
@@ -168,7 +168,7 @@
                     console.log(obj)
                     return {
                       id:obj.name,
-                      text: moment(obj.date_unix).format('M/D/YYYY H:mm')
+                      text: moment(obj.utcMilis).format('M/D/YYYY H:mm')
                     }
                   })
               },
