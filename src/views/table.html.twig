@@ -30,12 +30,6 @@
               </button>
             </div>
           </div>
-          <div class="col-xs-12 col-sm-6 hidden-print">
-            <select id="version_select" class="select2" style="width:100%" name="version">
-                  <option selected="selected" value="AL">Capone</option>
-                  <option value="Chuck">Norris</option>
-            </select>
-          </div>
         </div>
       </div>
       <div class="box-body">
@@ -619,15 +613,12 @@
     </div>
   </div>
 </div>
-<form id="upload_form" type="multipart/form-data" data-csrf="{{csrfToken}}" method="post" action="/data_assets" style="display:none" >
-  <input id="excell_upload" type="file" name="data_assets"/>
-</form>
+
 {% endblock %}
 
 {% block javascripts %}
 <script src="/js/jquery.dataTables.min.js"></script>
 <script src="/js/dataTables.bootstrap.min.js"></script>
-<script src="/js/select2.min.js"></script>
 <script>
   $(document).ready(function(){
 
@@ -650,51 +641,7 @@
       }
     });
 
-    // Select2 Intialization
-    $("#version_select").select2();
-
     // Trigger upload
-    $('#excell_upload').on('change',function(event){
-
-      event.preventDefault();
-      var formData = new FormData($("#upload_form")[0]);
-
-      $.ajax({
-        'type':$("#upload_form").attr('method'),
-        'data': formData,
-        'url': $("#upload_form").attr('action'),
-        'processData': false,
-        'contentType': false,
-        'mimeType': 'multipart/form-data',
-        'headers': {"X-CSRF-Token": $("#upload_form").attr('data-csrf') },
-        'beforeSend': function (x) {
-           if (x && x.overrideMimeType) {
-               x.overrideMimeType("multipart/form-data");
-          }
-          $('#trigger_upload').addClass('disabled');
-        },
-        'success':function(data){
-          data=JSON.parse(data);
-          $('#upload_form').attr('data-csrf',data.csrfToken)
-          if(data.status===true){
-            sucessMessageNotification("Excell file uploaded, it's contents will be available sortly");
-          } else {
-            errorMessageNotification(data.message);
-          }
-        },
-        'error':function(jqXHR,status,errorThrown){
-          if(jqXHR.status===403){
-            errorMessageNotification("Upload failed, please refresh the page in order to solve it");
-          } else {
-            errorMessageNotification("Upload failed, please try again later");
-          }
-        },
-        'complete':function(){
-          $('#trigger_upload').removeClass('disabled');
-        },
-        timeout: 3000
-      });
-    });
 
   })
 </script>
