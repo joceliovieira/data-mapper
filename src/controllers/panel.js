@@ -72,6 +72,24 @@ function PanelController(expressApp, emmiter, excellReader, graphMaker){
     })
   });
 
+  router.get('/flow-map/table',function(req,res,next){
+    const version=req.query.version;
+    if(!version){
+      return res.status(400).json({'message':'Please select a version to render'})
+    }
+
+    const page=req.query.page||1;
+    const limit=req.query.limit||10;
+
+    graphMaker.getTableRows(version,page,limit,(err,data)=>{
+      if(error){
+        console.log(error);
+        return res.status(500).json()
+      }
+      res.json(data); //Needs some tranforming
+    });
+  });
+
   router.get('/versions',function(req,res,next){
     const version=req.query.version;
     graphMaker.getVersionList(version,(error,data)=>{

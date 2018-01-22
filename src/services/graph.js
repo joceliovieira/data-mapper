@@ -243,4 +243,28 @@ module.exports=function(emmiter,config){
     })
   }
 
+  /**
+  * Retrieving the graphs Data into a table format
+  * @param {String} version The version inserted.
+  * @param {Integer} page The pagination index.
+  * @param {Integer} limit How many items the page will contain.
+  * @param {Function} callback The error or result returning callback function.
+  */
+  self.getTableRows=function(version,page,limit,callback){
+
+    const query=`MATCH (UPLOAD_PROCESS:UPLOAD_PROCESS {name:{version}})-[:HAS]->(ROW:ROW) RETURN ROW ORDER BY ROW.row_num SKIP {page} LIMIT {limit}`;
+
+    const session = _neo4j.session();
+    session.run(query,{'version':version,'page':page,'limit':limit}).then((data)=>{
+      const return_data=_.map(data.records,(obj)=>{
+        return obj._fields[0].properties;
+      });
+      callback(null,return_data);
+    }).catch((error)=>{
+      console.error(error);
+      callback(error);
+    })
+
+  }
+
 }
