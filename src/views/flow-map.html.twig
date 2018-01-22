@@ -10,16 +10,7 @@
   <div class="col-xs-12 col-sm-8 col-md-8 col-lg-10">
     <div class="box">
       <div class="box-body">
-        <div class="col-xs-12" >
-            <select id="version_select" style="width:100%" class="select2" name="version">
-              {% for data in versions %}
-                <option value="{{data.name}}">{{data.utcMilis}}</option>
-              {% endfor %}
-            </select>
-        </div>
-        <div class="class=col-xs-12" >
           <div id="graph_display" style="width: 100%;height: 800px; display: block;"></div>
-        </div>
       </div>
     </div>
   </div>
@@ -42,6 +33,7 @@
         </div>
       </div>
     </div>
+    {% include 'widgets/version_selector.html.twig' %}
   </div>
 </div>
 {% endblock %}
@@ -54,9 +46,9 @@
 
   $(document).ready(function(){
     //selectVersion in into the layout.html.twig template
-    selectVersion($('#version_select'),function(version) {
-      loadGraphData(version,renderGraph)
-    });
+    // selectVersion($('#version_select'),function(version) {
+    //   loadGraphData(version,renderGraph)
+    // });
   });
 
   /**
