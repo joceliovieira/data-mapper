@@ -212,7 +212,8 @@
         if(data.length > 0){
           data.forEach(function(obj){
             var item=$(document.createElement('li'))
-            item.text(moment(obj.utcMilis).local().format('ddd D/M/YYYY H:m:s'));
+
+            item.text(moment.utc(obj.utcMilis).format('ddd D/M/YYYY H:m'));
             item.attr('data-version',obj.name);
             item.on('click',function(event){
               event.preventDefault();
