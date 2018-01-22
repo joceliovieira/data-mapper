@@ -196,7 +196,7 @@
           title: 'Click To Select a version',
           todayHighlight: true
         }).on('changeDate',function(event){
-          var value=moment(new Date(event.date)).utc().format('D/M/YYYY')
+          var value=moment(new Date(event.date)).format('D/M/YYYY')
           ajaxGetVersions(value,onItemClickCallback);
         });
       }).fail(function(){
