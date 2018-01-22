@@ -58,7 +58,8 @@
   * @param {Function} callback The callback function
   */
   var loadGraphData=function(param,callback){
-    $.get('/flow-map/graph').done(function(data){
+    console.log(param)
+    $.get('/flow-map/graph',{'version':param}).done(function(data){
       $("#nodes").children().remove();
       callback(data);
     }).fail(function(jxqr){
