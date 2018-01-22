@@ -44,16 +44,23 @@ function PanelController(expressApp, emmiter, excellReader, graphMaker){
 
   //Getting the graph page
   router.get('/flow-map',function(req,res,next){
+    
     res.render('flow-map.html.twig',{
       'title': "Data graph"
     });
   });
 
   router.get('/flow-map/graph',function(req,res,next){
-    graphMaker.fetchDataAsGraph('6a8d8c47012a_1516564452895',(error,data)=>{
+    const version=req.query.version;
+
+    if(!version){
+      return res.status(400).json({'message':'Please select a version to render'})
+    }
+
+    graphMaker.fetchDataAsGraph(version,(error,data)=>{
       if(error){
         console.log(error);
-        return res.status(500).json({'message':'An error occured'})
+        return res.status(500).json()
       }
       res.json(data);
     })

@@ -98,6 +98,7 @@
   <script src="/js/jquery.min.js"></script>
   <script src="/js/bootstrap.min.js"></script>
   <script src="/js/adminlte.min.js"></script>
+  <script src="/js/moment.min.js"></script>
   <script>
 
     function errorMessageNotification(message){
@@ -132,6 +133,35 @@
       setTimeout(function(){
         $("#notification_message").hide();
       },1500)
+    }
+
+    function selectVersion(element,onSelectCallback){
+      if(element.select2 && typeof element.select2 === 'function') {
+          element.select2({
+            ajax:{
+              url:'/versions',
+              data:function(query){
+                return {
+                  version: params.term
+                }
+              },
+              processResults: function(data,params){
+                  params.page = params.page || 1;
+                  return $.map(data,function(obj){
+                    return {
+                      id:obj.name,
+                      text: moment(obj.date_unix).format('M/D/YYYY H:mm')
+                    }
+                  })
+              },
+              templateSelection:function(state){
+                if(state.id){
+                  onSelectCallback(state.id);
+                }
+              }
+            }
+          });
+      }
     }
 
   </script>

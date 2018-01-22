@@ -11,6 +11,7 @@ router.use('/js', [
   express.static(__dirname + '/../../node_modules/datatables-bootstrap/js'),
   express.static(__dirname + '/../../node_modules/select2/dist/js'),
   express.static(__dirname + '/../../node_modules/cytoscape/dist'),
+  express.static(__dirname + '/../../node_modules/moment/min'),
   express.static(__dirname + '/../../www/js')
 ]);
 

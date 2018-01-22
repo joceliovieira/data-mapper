@@ -12,8 +12,6 @@
       <div class="box-body">
         <div class="col-xs-12" >
             <select id="version_select" class="select2" name="version">
-                  <option selected="selected" value="AL">Capone</option>
-                  <option value="Chuck">Norris</option>
             </select>
         </div>
         <div class="class=col-xs-12" >
@@ -50,20 +48,31 @@
 <script src="/js/select2.min.js"></script>
 <script src="/js/cytoscape.js"></script>
 <script>
+
   $(document).ready(function(){
     $("#version_select").select2();
-    loadGraphData(renderGraph);
+    // loadGraphData(renderGraph);
+    //selectVersion in into the layout.html.twig template
+    selectVersion($('#version_select'),function(version) {
+      loadGraphData(version,renderGraph)
+    });
   });
 
   /**
   * Loads the graph data via ajax
+  * @param {String} param The search param
+  * @param {Function} callback The callback function
   */
-  var loadGraphData=function(callback){
+  var loadGraphData=function(param,callback){
     $.get('/flow-map/graph').done(function(data){
       $("#nodes").children().remove();
       callback(data);
     }).fail(function(jxqr){
-      errorMessageNotification('Could not fetch the graph data please try again later');
+      if(xhr.status === 400){
+        errorMessageNotification('Please provide a version in order to render the graph.');
+      } else {
+        errorMessageNotification('Could not fetch the graph data please try again later.');
+      }
     }).always(function(){
       console.log("Ajax finished");
     });
