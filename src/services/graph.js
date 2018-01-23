@@ -41,26 +41,27 @@ module.exports=function(emmiter,config){
         callback(error);
       }
 
+      console.log(row);
       //The replacement of the values where it will get stored in neo4j
       const values={
-        'dataid':row.dataId.trim(),
-        'dataAsset':row.dataAsset.trim(),
-        'purpoce':row.purpoce.trim(),
-        'dataSubject':row.dataSubject.trim(),
-        'source':row.source.trim(),
-        'pIIclasification':row.pIIclasification.trim(),
-        'securityClassification':row.securityClassification.trim(),
-        'categoryInfo':row.categoryInfo.trim(),
-        'appName':row.collectedBy.trim(),
-        'securityControl':row.securityControl.trim(),
-        'usedBy':row.usedBy.trim(),
-        'whoCanAccess':row.access.trim(),
-        'securityControl':row.securityControl.trim(),
-        'dataTransferMechanism':row.dataTranserMechanism.trim(),
-        'serviceName':row.collectedBy.trim(),
-        'serverOrService':row.storageOrData.trim(),
-        'processingType':row.processingType.trim(),
-        'collectionMethod':row.collectionMethod.trim(),
+        'dataid':(row.dataId.trim)?row.dataId.trim():row.dataId,
+        'dataAsset':(row.dataAsset.trim)?row.dataAsset.trim():row.dataAsset,
+        'purpoce':(row.purpoce.trim)?row.purpoce.trim():row.purpoce,
+        'dataSubject':(row.dataSubject.trim)?row.dataSubject.trim():row.dataSubject,
+        'source':(row.source.trim)?row.source.trim():row.source,
+        'pIIclasification':(row.pIIclasification.trim)?row.pIIclasification.trim():row.pIIclasification,
+        'securityClassification':(row.securityClassification.trim)?row.securityClassification.trim():row.securityClassification,
+        'categoryInfo':(row.categoryInfo.trim)?row.categoryInfo.trim():row.categoryInfo,
+        'appName':(row.collectedBy.trim)?row.collectedBy.trim():row.collectedBy,
+        'securityControl':(row.securityControl.trim)?row.securityControl.trim():row.securityControl,
+        'usedBy':(row.usedBy.trim)?row.usedBy.trim():row.usedBy,
+        'whoCanAccess':(row.access.trim)?row.access.trim():row.access,
+        'securityControl':(row.securityControl.trim)?row.securityControl.trim():row.securityControl,
+        'dataTransferMechanism':(row.dataTranserMechanism.trim)?row.dataTranserMechanism.trim():row.dataTranserMechanism,
+        'serviceName':(row.collectedBy.trim)?row.collectedBy.trim():row.collectedBy,
+        'serverOrService':(row.storageOrData.trim)?row.storageOrData.trim():row.storageOrData,
+        'processingType':(row.processingType.trim)?row.processingType.trim():row.processingType,
+        'collectionMethod':(row.collectionMethod.trim)?row.collectionMethod.trim():row.collectionMethod,
       }
 
       /**
@@ -107,12 +108,10 @@ module.exports=function(emmiter,config){
 
       //Merging version information with replacement strings
       Object.assign(values,version);
-
       values.rowData=JSON.stringify(row);
       values.rowNum=neo4j.int(rowNum);
       values.totalRows=neo4j.int(maxRows);
 
-      console.log(values)
 
       //The query itself that will be executed over the Neo4j Server
       let query=`MERGE (UPLOAD_PROCESS:UPLOAD_PROCESS {version_name:{version_name}, utcMilis:{date_unix}, date:{date}, totalRows: {totalRows} })

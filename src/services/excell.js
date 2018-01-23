@@ -147,7 +147,7 @@ module.exports=function(config) {
       const item=column+1;
       const key=config.excell.columnMap[column];
       if(worksheet[item] && key ){
-        rowData[key]=worksheet[item].v;
+        rowData[key]=worksheet[item].v+'';//Enforcing into string convertion
       }
     });
 
