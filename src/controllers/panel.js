@@ -81,7 +81,7 @@ function PanelController(expressApp, emmiter, excellReader, graphMaker){
     const page=req.query.page||1;
     const limit=req.query.limit||10;
 
-    graphMaker.getTableRows(version,page,limit,(err,data)=>{
+    graphMaker.getTableRows(version,page,limit,(error,data)=>{
       if(error){
         console.log(error);
         return res.status(500).json()

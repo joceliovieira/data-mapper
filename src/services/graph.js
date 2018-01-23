@@ -252,10 +252,11 @@ module.exports=function(emmiter,config){
   */
   self.getTableRows=function(version,page,limit,callback){
 
-    const query=`MATCH (UPLOAD_PROCESS:UPLOAD_PROCESS {name:{version}})-[:HAS]->(ROW:ROW) RETURN ROW ORDER BY ROW.row_num SKIP {page} LIMIT {limit}`;
+    const query=`MATCH (UPLOAD_PROCESS:UPLOAD_PROCESS {version_name:{version}})-[:HAS]->(ROW:ROW) RETURN ROW ORDER BY ROW.row_num SKIP {page} LIMIT {limit}`;
 
     const session = _neo4j.session();
-    session.run(query,{'version':version,'page':page,'limit':limit}).then((data)=>{
+    session.run(query,{'version':version,'page':neo4j.int(page),'limit':neo4j.int(limit)}).then((data)=>{
+      console.log(data);
       const return_data=_.map(data.records,(obj)=>{
         return obj._fields[0].properties;
       });
