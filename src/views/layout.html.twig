@@ -229,7 +229,11 @@
           $('ul[data-use="version_display"]').append(item);
         }
       }).fail(function(xhqr){
-        errorMessageNotification('Could not fetch the versions');
+        if(xhr.status==400){
+          errorMessageNotification('Please select a version in order to display the info');
+        } else {
+          errorMessageNotification('Could not fetch the versions due to an internal error');
+        }
       })
     }
   </script>

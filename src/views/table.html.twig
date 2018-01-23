@@ -175,10 +175,15 @@
 
 {% block javascripts %}
 <script>
+
+  var currentPage=1;
+  var fetchingData=false;
+
   $(document).ready(function(){
     versionSearchByDate(function(version){
       // loadGraphData(version,renderGraph)
       console.log("Version selected", version)
+      fetchDataAndRenderTheTable(currentPage,version);
     });
 
 
@@ -191,8 +196,23 @@
       }
     });
 
-    var fetchData=function(){
-
+    var fetchDataAndRenderTheTable=function(page,version){
+      if(!page){
+        page=1
+      }
+      fetchingData=true;
+      $.get('/flow-map/table',{'page':page,'version':version}).done(function(data){
+        console.log("Fetch Table Data");
+      })
+      .fail(function(xhqr){
+        if(xhqr.status==400){
+          errorMessageNotification('Please select a version in order to display the info');
+        } else {
+          errorMessageNotification('Could not fetch the versions due to an internal error');
+        }
+      }).always(function(fetchingData=false){
+        
+      });
     }
   })
 </script>
