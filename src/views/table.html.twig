@@ -64,106 +64,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-            </tr>
-            <tr>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-            </tr>
-            <tr>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-            </tr>
-            <tr>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-            </tr>
-            <tr>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-            </tr>
+
           </tbody>
         </table>
       </div>
@@ -182,8 +83,10 @@
   $(document).ready(function(){
     versionSearchByDate(function(version){
       // loadGraphData(version,renderGraph)
-      console.log("Version selected", version)
-      fetchDataAndRenderTheTable(currentPage,version);
+      if(!fetchingData){
+        currentPage=1;
+        fetchDataAndRenderTheTable(currentPage,version);
+      }
     });
 
 
@@ -202,7 +105,7 @@
       }
       fetchingData=true;
       $.get('/flow-map/table',{'page':page,'version':version}).done(function(data){
-        console.log("Fetch Table Data");
+        $('#infotable tbody').append(data);
       })
       .fail(function(xhqr){
         if(xhqr.status==400){
@@ -210,8 +113,8 @@
         } else {
           errorMessageNotification('Could not fetch the versions due to an internal error');
         }
-      }).always(function(fetchingData=false){
-        
+      }).always(function(){
+        fetchingData=false;
       });
     }
   })

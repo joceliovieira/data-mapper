@@ -86,7 +86,7 @@ function PanelController(expressApp, emmiter, excellReader, graphMaker){
         console.log(error);
         return res.status(500).json()
       }
-      res.json(data); //Needs some tranforming
+      res.render('widgets/htmlTableData.html.twig',{data:data}); //Needs some tranforming
     });
   });
 
