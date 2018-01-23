@@ -252,7 +252,7 @@ module.exports=function(emmiter,config){
   */
   self.getTableRows=function(version,page,limit,callback){
 
-    const query=`MATCH (UPLOAD_PROCESS:UPLOAD_PROCESS {version_name:{version}})-[:HAS]->(ROW:ROW) RETURN ROW ORDER BY ROW.row_num DESC SKIP {page} LIMIT {limit}`;
+    const query=`MATCH (UPLOAD_PROCESS:UPLOAD_PROCESS {version_name:{version}})-[:HAS]->(ROW:ROW) RETURN ROW ORDER BY ROW.row_num ASC`;
 
     const session = _neo4j.session();
 
