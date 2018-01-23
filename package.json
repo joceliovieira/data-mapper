@@ -33,7 +33,6 @@
     "cookie-parser": "^1.4.3",
     "csurf": "^1.9.0",
     "cytoscape": "^3.2.8",
-    "datatables": "^1.10.13",
     "datatables-bootstrap": "0.0.1",
     "express": "^4.16.2",
     "express-fileupload": "^0.3.0",
