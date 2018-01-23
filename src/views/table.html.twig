@@ -1,61 +1,66 @@
 {% extends "layout.html.twig" %}
 
 {% block css %}
-<link rel="stylesheet" href="/css/jquery.dataTables.min.css"/>
-<link rel="stylesheet" href="/css/select2.min.css" />
+<style>
+#infotable {
+  display: block;
+  width: 100%;
+  height: 500px;
+  overflow:auto;
+}
+</style>
 {% endblock %}
 
 
 {% block content %}
 <div class="row">
-  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+  <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 hidden-print">
     {% include 'widgets/version_selector.html.twig' %}
   </div>
-  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-    <div class="box">
+  <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 hidden-print">
+    <div class="box box-success box-solid">
       <div class="box-header">
-        <div class="row">
-          <div class="col-sm-6 col-xs-12 hidden-print">
-            <div class="btn-group hidden-xs" role="group" aria-label="Download and upload buttons">
-              <a class="btn btn-flat bg-olive" href="/data/template.xlsx">
-                <i class="fa fa-download" aria-hidden="true"></i>&nbsp;Download the Excell Template
-              </a>
-              <button class="btn btn-primary btn-flat" role="button" id="trigger_upload">
-                <i class="fa fa-upload" aria-hidden="true"></i>&nbsp;Upload the Excell File
-              </button>
-            </div>
-            <div class="visible-xs">
-              <a class="btn btn-flat btn-block bg-olive" href="/data/template.xlsx">
-                <i class="fa fa-download" aria-hidden="true"></i>Download the Excell Template
-              </a>
-              <button class="btn btn-primary btn-block btn-flat" role="button" id="trigger_upload">
-                <i class="fa fa-upload" aria-hidden="true"></i>&nbsp;Upload an Excell File
-              </button>
-            </div>
-          </div>
+        <h3>Upload an excell as new version</h3>
+        <div class="box-tools">
+          <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
         </div>
       </div>
       <div class="box-body">
-        <table id="infotable" class="table display nowrap dataTable" width="100%">
+        <div class="btn-group btn-group-vertical" style="width:100%" role="group" aria-label="Download and upload buttons">
+          <a class="btn btn-flat bg-olive" href="/data/template.xlsx">
+            <i class="fa fa-download" aria-hidden="true"></i>&nbsp;Download the Excell Template
+          </a>
+          <button class="btn btn-primary btn-flat" role="button" id="trigger_upload">
+            <i class="fa fa-upload" aria-hidden="true"></i>&nbsp;Upload the Excell File
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <div class="box">
+      <div class="box-body">
+        <table id="infotable" class="table display nowrap">
           <thead>
             <tr>
-              <th class="sorting" >Description</th>
-              <th class="sorting" >Category </th>
-              <th class="sorting" >Classification</th>
-              <th class="sorting" >Source</th>
-              <th class="sorting" >Collected By</th>
-              <th class="sorting" >Collection Method</th>
-              <th class="sorting" >Format</th>
-              <th class="sorting" >Used By</th>
-              <th class="sorting" >Collection Purpose</th>
-              <th class="sorting" >Transfer to</th>
-              <th class="sorting" >Security Classification</th>
-              <th class="sorting" >Transfer Control</th>
-              <th class="sorting" >Repository Format</th>
-              <th class="sorting" >Retention Site</th>
-              <th class="sorting" >Disclosed To</th>
-              <th class="sorting" >Retention Policy</th>
-              <th class="sorting" >Deletion Policy</th>
+              <th>Tag ID</th>
+              <th>Data Asset </th>
+              <th>Description</th>
+              <th>Personal Info Category</th>
+              <th>PII Classification</th>
+              <th>Source</th>
+              <th>Collected By</th>
+              <th>Collection Method</th>
+              <th>Accessing Person</th>
+              <th>Used By</th>
+              <th>Collection Purpose</th>
+              <th>Type of Processing</th>
+              <th>Data Transfer Mechanism</th>
+              <th>Security Classification</th>
+              <th>Data Transfer Security Control</th>
+              <th>Service stored or Transmitted</th>
+              <th>Retention Policy</th>
+              <th>Deletion Policy</th>
             </tr>
           </thead>
           <tbody>
@@ -77,46 +82,10 @@
               <td>AAAA</td>
               <td>AAAA</td>
               <td>AAAA</td>
-            </tr>
-            <tr>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
               <td>AAAA</td>
             </tr>
             <tr>
               <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-            </tr>
-            <tr>
               <td>AAAA</td>
               <td>AAAA</td>
               <td>AAAA</td>
@@ -153,24 +122,6 @@
               <td>AAAA</td>
               <td>AAAA</td>
               <td>AAAA</td>
-            </tr>
-            <tr>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
               <td>AAAA</td>
             </tr>
             <tr>
@@ -191,407 +142,10 @@
               <td>AAAA</td>
               <td>AAAA</td>
               <td>AAAA</td>
-            </tr>
-            <tr>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
               <td>AAAA</td>
             </tr>
             <tr>
               <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-            </tr>
-            <tr>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-            </tr>
-            <tr>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-            </tr>
-            <tr>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-            </tr>
-            <tr>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-            </tr>
-            <tr>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-            </tr>
-            <tr>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-            </tr>
-            <tr>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-            </tr>
-            <tr>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-            </tr>
-            <tr>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-            </tr>
-            <tr>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-            </tr>
-            <tr>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-            </tr>
-            <tr>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-            </tr>
-            <tr>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-            </tr>
-            <tr>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-            </tr>
-            <tr>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-            </tr>
-            <tr>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-            </tr>
-            <tr>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-            </tr>
-            <tr>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-            </tr>
-            <tr>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-              <td>AAAA</td>
-            </tr>
-            <tr>
               <td>AAAA</td>
               <td>AAAA</td>
               <td>AAAA</td>
@@ -620,23 +174,13 @@
 {% endblock %}
 
 {% block javascripts %}
-<script src="/js/jquery.dataTables.min.js"></script>
-<script src="/js/dataTables.bootstrap.min.js"></script>
 <script>
   $(document).ready(function(){
     versionSearchByDate(function(version){
       // loadGraphData(version,renderGraph)
       console.log("Version selected", version)
     });
-    /*Table Initialization*/
-    $("#infotable").DataTable({
-        "paging": true,
-        'searching': false,
-        'fixedHeader': true,
-        'scrollY': 300,
-        'scroller': true,
-        "autoWidth": true
-    });
+
 
     // Firing the file upload
     var uploading=false;
@@ -646,6 +190,10 @@
         $("#excell_upload").click();
       }
     });
+
+    var fetchData=function(){
+
+    }
   })
 </script>
 {% endblock %}
