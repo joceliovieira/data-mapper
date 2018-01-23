@@ -85,7 +85,6 @@
       // loadGraphData(version,renderGraph)
       if(!fetchingData){
         currentPage=1;
-        $('#infotable tbody').html("");
         fetchDataAndRenderTheTable(currentPage,version);
       }
     });
@@ -106,6 +105,9 @@
       }
       fetchingData=true;
       $.get('/flow-map/table',{'page':page,'version':version}).done(function(data){
+        if(page==1){
+          $('#infotable tbody').html("");
+        }
         $('#infotable tbody').append(data);
       })
       .fail(function(xhqr){
