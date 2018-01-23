@@ -3,6 +3,8 @@ const bodyParser=require('body-parser');
 const cookieParser=require('cookie-parser');
 const session = require("express-session");
 const csrf = require('csurf');
+const twig = require("twig");
+const io = require('socket.io');
 
 const passport = require("passport");
 const EventEmitter = require('events');
@@ -14,8 +16,17 @@ const Excell = require('./services/excell');
 
 /*Generating Services*/
 const app=express();
+const server=app.listen(config.http.port,function(){
+  console.log("Listening over port: "+config.http.port);
+});
+const websocket=io.listen(server);
+
 
 const emmiter=new EventEmitter();
+
+twig.extendFunction('websockerUrl',function(){
+  return config.http.socketio_url;
+});
 
 //Handle Neo4j connection error
 emmiter.on('neo4j_connection_error',(message)=>{
@@ -65,7 +76,7 @@ const user=require('./controllers/user');
 app.use('/',user);
 
 const PanelController=require('./controllers/panel');
-const panelController=new PanelController(app,emmiter,excellReader,graphMaker);
+const panelController=new PanelController(app,emmiter,websocket,excellReader,graphMaker);
 
 app.get('/',function(req,res,next){
   // if (req.user) {
@@ -73,10 +84,4 @@ app.get('/',function(req,res,next){
   // } else {
   //     res.redirect('/login');
   // }
-});
-
-
-
-app.listen(config.http.port,function(){
-  console.log("Listening over port: "+config.http.port);
 });

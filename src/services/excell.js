@@ -23,7 +23,11 @@ module.exports=function(config) {
   *
   * The callback should take the following parameters:
   * lineData: An object containing the data of the line
-  * emmiter: An object where the event emmiter gets passed
+  * firstRowData: The labelrs that are in the first row
+  * maxRows: How many rows the entry has
+  * row: The current row
+  * version: The upload version
+  * nextCallback: The callback that handles the next iteration
   *
   * @return Emmiter
   */
@@ -57,7 +61,7 @@ module.exports=function(config) {
           if(error) {
             return responseCallback(error)
           }
-          getColumnDisplayNamesFormFirstLine(worksheet,(firstRowData)=>{
+          getColumnDisplayNamesFormFirstLine(worksheet,(firstRowData)=>{``
             iterateWorksheet(worksheet,rowCount,2,(rowData,maxRows,row,nextCallback)=>{
               onReadCallback(rowData,firstRowData,maxRows,row,version,nextCallback);
             });//Start readinng on second row

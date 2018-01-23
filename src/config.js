@@ -5,7 +5,9 @@ const httpConfig={
   'body_size': '100mb',
   // Http listen port
   'port':9780,
+  'socketio_url':null
 };
+
 
 const neo4jConfig={
   //Neo4j configuration
@@ -36,6 +38,21 @@ const logs={
 if(process.env.HTTP_PORT){
   httpConfig.port=process.env.HTTP_PORT;
 }
+
+//config socketio url
+if(process.env.CLIENT_SOCKETIO_URL){
+
+  //Assuming non https use https reverse proxy for that
+  if(process.env.CLIENT_SOCKETIO_URL.lastIndexOf('ws://',0)!==0){
+    httpConfig.socketio_url='ws://'+process.env.CLIENT_SOCKETIO_URL;
+  } else {
+    httpConfig.socketio_url=process.env.CLIENT_SOCKETIO_URL;
+  }
+} else {
+  httpConfig.socketio_url='ws://0.0.0.0:'+httpConfig.port;
+}
+
+
 
 //Config Neo4j connection
 if(process.env.NEO4J_HOST){

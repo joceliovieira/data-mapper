@@ -1,9 +1,13 @@
 const express = require('express');
 const fileUpload = require('express-fileupload');
 
-function PanelController(expressApp, emmiter, excellReader, graphMaker){
+function PanelController(expressApp, emmiter, io, excellReader, graphMaker){
 
   const router = express.Router();
+
+  const room=io;
+
+  // emmiter.on('')
 
   router.use(fileUpload());
 
