@@ -5,7 +5,7 @@
 #infotable {
   display: block;
   width: 100%;
-  height: 500px;
+  max-height: 500px;
   overflow:auto;
 }
 </style>
@@ -85,6 +85,7 @@
       // loadGraphData(version,renderGraph)
       if(!fetchingData){
         currentPage=1;
+        $('#infotable tbody').html("");
         fetchDataAndRenderTheTable(currentPage,version);
       }
     });
