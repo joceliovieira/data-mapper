@@ -1,5 +1,6 @@
 const neo4j = require('neo4j-driver').v1;
 const _ = require('underscore');
+const config = require('../config');
 
 module.exports=function(emmiter,config){
 
@@ -255,10 +256,21 @@ module.exports=function(emmiter,config){
     const query=`MATCH (UPLOAD_PROCESS:UPLOAD_PROCESS {version_name:{version}})-[:HAS]->(ROW:ROW) RETURN ROW ORDER BY ROW.row_num SKIP {page} LIMIT {limit}`;
 
     const session = _neo4j.session();
+
+    const columns=config.excell.columnMap;
+
     session.run(query,{'version':version,'page':neo4j.int(page),'limit':neo4j.int(limit)}).then((data)=>{
-      console.log(data);
       const return_data=_.map(data.records,(obj)=>{
-        return obj._fields[0].properties;
+
+        const item = obj._fields[0].properties;
+        const rowNumber=item.row_num;
+        const rowInfo = JSON.parse(item.rowData);
+
+        return _.map(Object.keys(columns).sort(),(key)=>{
+          var itemToDisplay=columns[key];
+          return rowInfo[itemToDisplay];
+        });
+
       });
       callback(null,return_data);
     }).catch((error)=>{
