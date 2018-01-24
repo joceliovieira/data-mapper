@@ -8,8 +8,12 @@ function PanelController(expressApp, emmiter, io, excellReader, graphMaker){
   const room=io;
 
   emmiter.on('read-complete',function(version){
-    io.emit(version);
-  })
+    io.emit('read-complete',version);
+  });
+
+  emmiter.on('insert_row_error',function(err,version,row){
+    io.emit('insert-error',version,row);
+  });
 
   router.use(fileUpload());
 

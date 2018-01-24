@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="websockerUrl" content="{{ websockerUrl() }}">
   <title> {{ title }} </title>
   <link rel="stylesheet" href="/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/skin-purple.css">
@@ -105,6 +106,9 @@
   <script>
 
     $(document).ready(function(){
+
+      var socketioUrl=$('meta[name="websockerUrl"]').attr('content');
+
       $('#excell_upload').on('change',function(event){
         event.preventDefault();
         var formData = new FormData($("#upload_form")[0]);

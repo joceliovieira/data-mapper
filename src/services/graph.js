@@ -35,7 +35,7 @@ module.exports=function(emmiter,config){
       const transaction= session.beginTransaction();
 
       const errorHandler=(error)=>{
-        _emmiter.emit('insert_row_error',error);
+        _emmiter.emit('insert_row_error',error,version,rowNum);
         console.error(error);
         session.close();
         callback(error);
