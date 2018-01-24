@@ -109,7 +109,15 @@
     $(document).ready(function(){
 
       var socketioUrl=$('meta[name="websockerUrl"]').attr('content');
-      console.log(socketioUrl);
+      var socket=io(socketioUrl);
+
+      socket.on('read-complete',function(version){
+        sucessMessageNotification('Inserting the excell file with version '+version.name+' has been completed.');
+      })
+
+      socket.on('insert-error',function(version,error){
+        errorMessageNotification('Cannot insert the '+version.name);
+      });
 
       $('#excell_upload').on('change',function(event){
         event.preventDefault();

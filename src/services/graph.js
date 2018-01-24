@@ -41,7 +41,6 @@ module.exports=function(emmiter,config){
         callback(error);
       }
 
-      console.log(row);
       //The replacement of the values where it will get stored in neo4j
       const values={
         'dataid':(row.dataId.trim)?row.dataId.trim():row.dataId,

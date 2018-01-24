@@ -61,13 +61,16 @@ module.exports=function(config,emmiter) {
           if(error) {
             return responseCallback(error)
           }
+          //@todo: return results better
           getColumnDisplayNamesFormFirstLine(worksheet,(firstRowData)=>{
             iterateWorksheet(worksheet,rowCount,2,(rowData,maxRows,row,nextCallback)=>{
-              onReadCallback(rowData,firstRowData,maxRows,row,version,nextCallback);
-            });//Start readinng on second row
-          },()=>{
-            emmiter.emmit('read-complete',version);
-          })
+              if(rowData){
+                onReadCallback(rowData,firstRowData,maxRows,row,version,nextCallback);
+              } else {
+                emmiter.emit('read-complete',version);
+              }
+            });
+          });
           return responseCallback(null,rowCount);
         });
 
@@ -103,9 +106,8 @@ module.exports=function(config,emmiter) {
   * @param {Int} maxRows Count how many rows have been iterated.
   * @param {Int} row read the current row.
   * @param {Function} callback A callback function that returns each row data.
-  * @param {Function} onEndCallback A callback that indicated that the rows have been inserted
   */
-  const iterateWorksheet=function(worksheet,maxRows,row,callback,onEndCallback){
+  const iterateWorksheet=function(worksheet,maxRows,row,callback){
 
     process.nextTick(function(){
       //Skipping first row
@@ -113,8 +115,9 @@ module.exports=function(config,emmiter) {
         return iterateWorksheet(worksheet,maxRows,2,callback);
       }
 
+      //@todo Return results better
       if(row > maxRows){
-        return onEndCallback();
+        return callback(null,maxRows,row);
       }
 
       const alphas=_.range('A'.charCodeAt(0),config.excell.maxColumn.charCodeAt(0));
