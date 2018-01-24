@@ -176,7 +176,7 @@ module.exports=function(config,emmiter) {
       column=String.fromCharCode(column);
       const item=column+1;
       const key=config.excell.columnMap[column];
-      if(worksheet[item] && key ){
+      if(worksheet[item] && key ) {
         rowData[key]=worksheet[item].v+'';//Enforcing into string convertion
       }
     });

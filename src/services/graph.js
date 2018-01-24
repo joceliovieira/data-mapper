@@ -50,6 +50,7 @@ module.exports=function(emmiter,config){
   */
   self.insertFromExcellRow=function(row,labels,maxRows,rowNum,version,callback){
 
+      //I check the data there because we possibly need to do a different handling of them
       if(!utils.nonEmptyDataRowObject(row)){
         return  callback(null);//Skip the insertion
       }
