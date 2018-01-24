@@ -6,7 +6,7 @@ const csrf = require('csurf');
 const twig = require("twig");
 const io = require('socket.io');
 
-const passport = require("passport");
+// const passport = require("passport");
 const EventEmitter = require('events');
 
 
@@ -35,11 +35,11 @@ emmiter.on('neo4j_connection_error',(message)=>{
   process.exit(1);
 });
 
-emmiter.on('mongodb_connection_error',(message)=>{
-  console.error('Mongodb cannot connect');
-  console.error(message);
-  process.exit(1);
-});
+// emmiter.on('mongodb_connection_error',(message)=>{
+//   console.error('Mongodb cannot connect');
+//   console.error(message);
+//   process.exit(1);
+// });
 
 const excellReader = new Excell(config,emmiter);
 const graphMaker = new Graph(emmiter,config);
@@ -58,8 +58,8 @@ app.use(function (req, res, next){
   next();
 });
 
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 
 app.set('views', __dirname + '/views');

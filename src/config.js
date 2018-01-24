@@ -95,11 +95,6 @@ if(process.env.MONGO_CONNECTION_STRING){
   mongoDbConfig.connection_string=process.env.MONGO_CONNECTION_STRING
 }
 
-// Excell uploading directory
-if(process.env.EXCELL_UPLOAD){
-  excell_upload.path=process.env.EXCELL_UPLOAD
-}
-
 // DO NOT EDIT BELLOW THIS LINE
 
 const excellFormat={
