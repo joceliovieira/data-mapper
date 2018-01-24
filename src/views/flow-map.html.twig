@@ -117,9 +117,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
         'text-outline-color': '#181A1F',
       }).selector('edge')
       .css({
+        'curve-style': 'bezier',
         'line-color': '#000000',
         'content':'data(type)',
-        'color': '#F00FF0'
+        'color': '#F00FF0',
+        'width': 4,
+        'target-arrow-shape': 'triangle',
+        'target-arrow-color': '#000000'
       });
 
     data.nodes.forEach(function(item,index){
