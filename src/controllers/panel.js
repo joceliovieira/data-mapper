@@ -7,7 +7,9 @@ function PanelController(expressApp, emmiter, io, excellReader, graphMaker){
 
   const room=io;
 
-  // emmiter.on('')
+  emmiter.on('read-complete',function(version){
+    io.emit(version);
+  })
 
   router.use(fileUpload());
 

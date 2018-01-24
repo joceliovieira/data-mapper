@@ -41,7 +41,7 @@ emmiter.on('mongodb_connection_error',(message)=>{
   process.exit(1);
 });
 
-const excellReader = new Excell(config);
+const excellReader = new Excell(config,emmiter);
 const graphMaker = new Graph(emmiter,config);
 
 

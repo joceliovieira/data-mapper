@@ -9,7 +9,7 @@ const moment=require('moment');
 const config=require('../config');
 
 
-module.exports=function(config) {
+module.exports=function(config,emmiter) {
 
   const self=this;
 
@@ -61,10 +61,12 @@ module.exports=function(config) {
           if(error) {
             return responseCallback(error)
           }
-          getColumnDisplayNamesFormFirstLine(worksheet,(firstRowData)=>{``
+          getColumnDisplayNamesFormFirstLine(worksheet,(firstRowData)=>{
             iterateWorksheet(worksheet,rowCount,2,(rowData,maxRows,row,nextCallback)=>{
               onReadCallback(rowData,firstRowData,maxRows,row,version,nextCallback);
             });//Start readinng on second row
+          },()=>{
+            emmiter.emmit('read-complete',version);
           })
           return responseCallback(null,rowCount);
         });
@@ -101,8 +103,9 @@ module.exports=function(config) {
   * @param {Int} maxRows Count how many rows have been iterated.
   * @param {Int} row read the current row.
   * @param {Function} callback A callback function that returns each row data.
+  * @param {Function} onEndCallback A callback that indicated that the rows have been inserted
   */
-  const iterateWorksheet=function(worksheet,maxRows,row,callback){
+  const iterateWorksheet=function(worksheet,maxRows,row,callback,onEndCallback){
 
     process.nextTick(function(){
       //Skipping first row
@@ -111,7 +114,7 @@ module.exports=function(config) {
       }
 
       if(row > maxRows){
-        return;
+        return onEndCallback();
       }
 
       const alphas=_.range('A'.charCodeAt(0),config.excell.maxColumn.charCodeAt(0));
