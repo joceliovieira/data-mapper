@@ -31,7 +31,7 @@ services:
       - './package.json:/opt/map/package.json'
       - './docker-volumes/app_dev:/var/log/datamap'
     ports:
-      - "9781:9780"
+      - "9781:9781"
     environment:
       NEO4J_HOST: 'neo4j_dev'
       NEO4J_USER: 'neo4j'

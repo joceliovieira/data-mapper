@@ -6,14 +6,14 @@ ENV NEO4J_USER=""
 ENV NEO4J_PASSWORD=""
 ENV MONGO_CONNECTION_STRING=""
 ENV LOGS_DIR="/var/log/data_map"
-
+ENV CLIENT_SOCKETIO_URL=""
+ENV HTTP_PORT="9781"
 
 RUN mkdir -p /opt/map &&\
     mkdir -p /var/log/data_map &&\
     chmod 0666 /var/log/data_map &&\
     npm install nodemon -g
 
-EXPOSE 7474
 VOLUME /var/log/data_map
 VOLUME /opt/map
 
