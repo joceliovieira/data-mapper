@@ -74,10 +74,12 @@ module.exports=function(config,emmiter) {
         const version=generateUid();
 
         return entryLengthValidations(worksheet,(error,rowCount) => {
+
           if(error) {
             return responseCallback(error)
           }
-          //@todo: return results better
+
+          //@todo: Fix this spagheti code
           getColumnDisplayNamesFormFirstLine(worksheet,(firstRowData)=>{
             iterateWorksheet(worksheet,rowCount,2,(rowData,maxRows,row,nextCallback)=>{
               if(rowData){
@@ -86,7 +88,9 @@ module.exports=function(config,emmiter) {
                 emmiter.emit('read-complete',version);
               }
             });
+
           });
+
           return responseCallback(null,rowCount);
         });
 

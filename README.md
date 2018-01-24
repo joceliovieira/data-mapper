@@ -1,4 +1,4 @@
-# FLOW-D a GDPR private data flowing software
+# FLOW-D a GDPR data flow mapping tool
 
 A simple tool for mapping the data flows of your organization
 

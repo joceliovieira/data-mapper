@@ -17,7 +17,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 const neo4j = require('neo4j-driver').v1;
 const _ = require('underscore');
+
 const config = require('../config');
+const utils = require('../utils/utils');
 
 module.exports=function(emmiter,config){
 
@@ -47,6 +49,10 @@ module.exports=function(emmiter,config){
   * @param {Object} version The version information
   */
   self.insertFromExcellRow=function(row,labels,maxRows,rowNum,version,callback){
+
+      if(!utils.nonEmptyDataRowObject(row)){
+        return  callback(null);//Skip the insertion
+      }
 
       const session = _neo4j.session()
       const transaction= session.beginTransaction();
