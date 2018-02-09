@@ -40,9 +40,9 @@ const emailConfig={
   'email':''
 }
 
-const mongoDbConfig={
-  'connection_string':"mongodb://localhost/mydb"
-}
+// const mongoDbConfig={
+//   'connection_string':"mongodb://localhost/mydb"
+// }
 
 const logs={
   'path':__dirname+'/../logs',
@@ -109,9 +109,9 @@ fs.mkdir(logs.path,'0666',function(e){
 });
 
 //MongoDb connection
-if(process.env.MONGO_CONNECTION_STRING){
-  mongoDbConfig.connection_string=process.env.MONGO_CONNECTION_STRING
-}
+// if(process.env.MONGO_CONNECTION_STRING){
+//   mongoDbConfig.connection_string=process.env.MONGO_CONNECTION_STRING
+// }
 
 // DO NOT EDIT BELLOW THIS LINE
 
@@ -142,7 +142,7 @@ const excellFormat={
 module.exports={
   'http':httpConfig,
   'neo4j':neo4jConfig,
-  'mongoDb':mongoDbConfig,
+  // 'mongoDb':mongoDbConfig,
   'logs':logs,
   'excell':excellFormat,
 };

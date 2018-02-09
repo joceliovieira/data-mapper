@@ -7,7 +7,6 @@ services:
     image: 'pcmagas/data-map:latest'
     links:
       - 'neo4j'
-      - 'mongodb'
     volumes:
       - './docker-volumes/app_dev:/var/log/datamap'
     ports:
@@ -25,7 +24,6 @@ services:
     image: 'pcmagas/data-map:dev'
     links:
       - 'neo4j_dev'
-      - 'mongodb'
     volumes:
       - './src:/opt/map/src'
       - './www:/opt/map/www'
@@ -57,9 +55,9 @@ services:
     environment:
       NEO4J_AUTH: 'neo4j/neo45j'
 
-  mongodb:
-    image: 'mongo'
-    ports:
-      - '27017:27017'
-    volumes:
-      - './docker-volumes/mongodb/:/data/db'
+  # mongodb:
+  #   image: 'mongo'
+  #   ports:
+  #     - '27017:27017'
+  #   volumes:
+  #     - './docker-volumes/mongodb/:/data/db'
