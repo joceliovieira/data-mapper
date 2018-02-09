@@ -48,9 +48,9 @@ Currently is not uploaded into any registry due to missing parts.
 The application's configuration and the containers id defined using the enviromental variables as the followng tavble shows:
 
 Variable Name | Description | Optional | Used In Docker | Default Value* | Dockerfile for image `pcmagas/data-map` default value** | Dockerfile for image `pcmagas/data-map:dev` default value** | Currenty Supported-Used
---- | --- | --- | --- | --- | --- | --- | --- | --- | ----
+--- | --- | --- | --- | --- | --- | --- | --- | --- | ---
 HTTP_PORT | The port that the application will listen into | :heavy_check_mark: | :heavy_check_mark: | 9780  | 9780 | 9781 | :heavy_check_mark:
-CLIENT_SOCKETIO_URL | The url of socketio websocket that the website will listen into | :heavy_check_mark: | :heavy_check_mark: | `ws://0.0.0.0:^http_port^` (where `^http_port^` is the port defined above) | N/A | :heavy_check_mark:
+CLIENT_SOCKETIO_URL | The url of socketio websocket that the website will listen into | :heavy_check_mark: | :heavy_check_mark: | `ws://0.0.0.0:^http_port^` (where `^http_port^` is the port defined above) | N/A | N/A | :heavy_check_mark:
 NEO4J_HOST | The neo4j host server | :x: | :heavy_check_mark: | N/A | N/A | N/A | :heavy_check_mark:
 NEO4J_USER | The neo4j username used in order to connect into neo4j server | :x: | :heavy_check_mark: | N/A | N/A | N/A | :heavy_check_mark:
 NEO4J_PASSWORD | The neo4j password used in order to connect into neo4j server | :x: | :heavy_check_mark: | N/A | N/A | N/A | :heavy_check_mark:
